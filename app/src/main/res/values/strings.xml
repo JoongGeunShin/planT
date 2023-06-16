@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">planT</string>
+    <!--로그인 회원가입-->
+    <string name="id">id</string>
+    <string name="password">password</string>
+    <!--구글 로그인-->
+    <string name="google_login_client_id">540104718279-p40857ivf5jqbim5p09est6tetdiva5d.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -5,16 +5,20 @@ plugins {
 
 android {
     namespace 'com.example.plant'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.plant"
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -34,13 +38,30 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation "com.kakao.sdk:v2-user:2.0.1"
-    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: '1.27.0'
+    // 구글 관련
+    // Google Play services
+    implementation 'com.google.gms:google-services:4.3.15'
+    implementation 'com.google.firebase:firebase-auth:22.0.0'
+    implementation 'com.google.firebase:firebase-bom:32.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    // 카카오 관련
+    implementation "com.kakao.sdk:v2-user:2.10.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+
+    // navigation implementations(https://developer.android.com/guide/navigation/get-started) <jetpack>
+    def nav_version = "2.6.0"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    // 원형 이미지
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
 }

@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.PlanT" parent="Base.Theme.PlanT" />
+    <!--로그인 텍스트-->
+    <style name="Theme.MaterialExam" parent="Theme.MaterialComponents.DayNight.DarkActionBar"></style>
 </resources>
