@@ -13,6 +13,8 @@ dependencyResolutionManagement {
         jcenter()
         // 카카오 로그인 테스트
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
+        // 네이버 dynamic maps API repository
+        maven {url 'https://naver.jfrog.io/artifactory/maven/'}
     }
 }
 rootProject.name = "planT"

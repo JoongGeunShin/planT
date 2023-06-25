@@ -10,10 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.plant.IntroActivity
@@ -23,7 +20,6 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
-import kotlinx.coroutines.launch
 import android.content.Intent
 
 class LoginFragment : Fragment() {
@@ -92,7 +88,22 @@ class LoginFragment : Fragment() {
                 UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
             }
         }
-
+        // 임시
+        val passMainBtn = view.findViewById<Button>(R.id.passMainBtn)
+        passMainBtn.setOnClickListener {
+//            UserApiClient.instance.logout { error ->
+//                if (error != null) {
+//                    Log.e(TAG, "로그아웃 실패. SDK에서 토큰 삭제됨", error)
+//                }
+//                else {
+////                    Toast.makeText(introActivity,"로그아웃 성공",Toast.LENGTH_SHORT).show()
+//                    val intent = Intent(introActivity,MainActivity::class.java)
+//                    startActivity(intent)
+//                }
+//            }
+            val intent = Intent(introActivity,MainActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }

@@ -4,6 +4,11 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!--for current location-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
         android:name=".kakao.GlobalApplication"
         android:allowBackup="true"
@@ -15,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PlanT"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="u04wstprb6" />
         <activity
             android:name=".IntroActivity"
             android:exported="true">
@@ -40,7 +48,7 @@
                     android:scheme="@string/kakao_redirection_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

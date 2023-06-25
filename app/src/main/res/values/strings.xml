@@ -7,4 +7,14 @@
     <string name="google_login_client_id">540104718279-p40857ivf5jqbim5p09est6tetdiva5d.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--bottom navigation items-->
+    <string name="bottom_navi_home">홈</string>
+    <string name="bottom_navi_calendar">달력</string>
+    <string name="bottom_navi_userinfo">회원 정보</string>
+    <string name="bottom_navi_settings">설정</string>
+
+    <!--지도 strings-->
+    <string name="confirm_text">확인</string>
+    <string name="text_move_map_set_location">지도를 움직여 위치를 설정하세요</string>
 </resources>

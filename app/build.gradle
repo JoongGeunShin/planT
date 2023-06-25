@@ -19,6 +19,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 
     buildTypes {
@@ -63,5 +64,19 @@ dependencies {
 
     // 원형 이미지
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    // Naver Cloud platform API (Dynamic Map)
+    implementation 'com.naver.maps:map-sdk:3.16.2'
+    implementation("com.google.android.gms:play-services-location:16.0.0") // current location
+
+    // tedpermission
+    implementation 'io.github.ParkSangGwon:tedpermission-rx3:3.3.0'
+    implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
+    implementation 'io.github.ParkSangGwon:tedpermission-coroutine:3.3.0'
+    implementation 'io.github.ParkSangGwon:tedpermission-rx2:3.3.0'
+
+    // alert dialogue
+    def anko_version = "0.10.5"
+    implementation "org.jetbrains.anko:anko:$anko_version"
 
 }
