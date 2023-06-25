@@ -15,8 +15,6 @@ import com.example.plant.main_fragment.HomeFragment
 import com.example.plant.main_fragment.SettingsFragment
 import com.example.plant.main_fragment.UserinfoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.gun0912.tedpermission.PermissionListener
-import com.gun0912.tedpermission.rx3.TedPermission
 
 
 class MainActivity : AppCompatActivity(){
