@@ -17,9 +17,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        viewBinding = true
-        dataBinding = true
+//    buildFeatures {
+//        viewBinding = true
+//        dataBinding = true
+//    }
+    dataBinding{
+        enabled = true
+    }
+    viewBinding{
+        enabled = true
     }
 
     buildTypes {
@@ -78,5 +84,13 @@ dependencies {
     // alert dialogue
     def anko_version = "0.10.5"
     implementation "org.jetbrains.anko:anko:$anko_version"
+
+    // glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.4'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.6.4'
 
 }

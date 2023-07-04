@@ -15,6 +15,6 @@
     <string name="bottom_navi_settings">설정</string>
 
     <!--지도 strings-->
-    <string name="confirm_text">확인</string>
-    <string name="text_move_map_set_location">지도를 움직여 위치를 설정하세요</string>
+    <string name="search_text">장소, 버스, 지하철, 주소 검색</string>
+    <string name="text_move_map_set_location">지도를 움직여 확인하세요</string>
 </resources>

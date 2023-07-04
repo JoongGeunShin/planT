@@ -1,37 +1,35 @@
 package com.example.plant.main_fragment
 
-import android.R
-
-import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.Html
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.NonNull
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil.setContentView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.findFragment
 import com.example.plant.MainActivity
-import com.gun0912.tedpermission.*
-import com.gun0912.tedpermission.normal.TedPermission
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraUpdate
+import com.example.plant.NaverSearch.LocationSearchInterface
+import com.example.plant.NaverSearch.LocationDTO
+import com.example.plant.NaverSearch.RecyclerViewAdapter
+import com.example.plant.NaverSearch.RecyclerViewData
+import com.example.plant.databinding.FragmentBottomnviHomeBinding
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
-import com.naver.maps.map.MapView
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.UiSettings
-import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
-import okhttp3.internal.Util
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 //, PermissionListener
@@ -45,6 +43,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
     private lateinit var locationSource: FusedLocationSource
 
+    // binding
+    private var _binding: FragmentBottomnviHomeBinding? = null
+    private val binding get() = _binding!!
+
+    // recycler view
+    private val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
+    private val SEARCH_SECRET_KEY = "VMmDTZuvfv"
+    lateinit var recyclerViewAdapter : RecyclerViewAdapter
+    val datas = mutableListOf<RecyclerViewData>()
+
     override fun onAttach(context:Context){
         super.onAttach(context)
         mainActivity = context as MainActivity
@@ -55,7 +63,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     override fun onCreateView(
@@ -63,9 +70,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(com.example.plant.R.layout.fragment_bottomnvi_home, container, false)
+//        val view = inflater.inflate(com.example.plant.R.layout.fragment_bottomnvi_home, container, false)
+        _binding = FragmentBottomnviHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+//        edt_searchLocation = view.findViewById(com.example.plant.R.id.edt_searchLocation)
+//        rv_items = view.findViewById(com.example.plant.R.id.rv_items)
 
-
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,33 +92,18 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // onMapReady 호출
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+//        binding.tvLocation.text = "안녕"
 
+        locationTextWatcher()
     }
 
-//    // <-- using ted permission, location
-//    private fun requestPermission() {
-//        TedPermission.create()
-//            .setPermissionListener(this)
-//            .setRationaleMessage("위치 정보 제공이 필요한 서비스입니다.")
-//            .setDeniedMessage("[설정] -> [권한]에서 권한 변경이 가능합니다.")
-//            .setDeniedCloseButtonText("닫기")
-//            .setGotoSettingButtonText("설정")
-//            .setRationaleTitle("위치 권한 설정")
-//            .setPermissions(
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            )
-//            .check()
-//    }
-//    override fun onPermissionGranted() {
-//    }
-//    override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
-//        Toast.makeText(mainActivity,"위치 정보 제공이 거부되었습니다.",Toast.LENGTH_SHORT).show()
-//    }
-//    // ted permission -->
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onMapReady(@NonNull naverMap: NaverMap) {
-        Toast.makeText(mainActivity,"onMapReadey 호출 완료",Toast.LENGTH_SHORT).show()
+//        Toast.makeText(mainActivity, "onMapReadey 호출 완료", Toast.LENGTH_SHORT).show()
         this.naverMap = naverMap
 
         // uiSettings
@@ -117,8 +113,81 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationSource = locationSource
         uiSettings.isLocationButtonEnabled = true
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
+    }
 
+    public lateinit var text : String
+    private fun locationTextWatcher(){
+        binding.edtSearchLocation.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                text = binding.edtSearchLocation.text.toString()
+//                Toast.makeText(mainActivity, text,Toast.LENGTH_SHORT).show()
+                clearRecycler()
+                binding.btnFindWay.setOnClickListener {
+                    connectNaverSearch()
+                }
+
+//                connectNaverSearch()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if(s.isNullOrEmpty()){
+                    clearRecycler()
+                }
+
+            }
+        })
+    }
+
+//    lateinit var searchAdapter: SearchAdapter
+//    val datas = mutableListOf<SearchData>()
+    // 위 검색 토대로 recyclerview 생성
+    private fun connectNaverSearch() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://openapi.naver.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val locationSearchInterface = retrofit.create(LocationSearchInterface::class.java)
+
+        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID,SEARCH_SECRET_KEY,text,5)
+            .enqueue(object : Callback<LocationDTO> {
+                override fun onResponse(
+                    call: Call<LocationDTO>,
+                    response: Response<LocationDTO>
+                ) {
+                    if(response.isSuccessful.not()){
+                        return
+                    }
+                    response.body()?.locations?.forEach{
+                        addRecycler(Html.fromHtml(it.title).toString(),it.category,it.description,it.roadAddress)
+                    }
+                    recyclerViewAdapter.datas = datas
+                }
+                override fun onFailure(call: Call<LocationDTO>, t: Throwable) {
+                    Log.d(TAG, "Connection ERROR")
+                }
+            })
+    }
+    private fun clearRecycler(){
+        datas.clear()
+    }
+    private fun addRecycler(title : String, category: String, description: String, roadAddress: String){
+        recyclerViewAdapter = RecyclerViewAdapter(mainActivity)
+        binding.rvItems.adapter = recyclerViewAdapter
+        datas.apply {
+            add(RecyclerViewData(title, category, description, roadAddress))
         }
+        // RecyclerclickEvent
+        recyclerViewAdapter.setOnItemClickListener(object : RecyclerViewAdapter.OnItemClickListener{
+            override fun onItemClick(v: View, data: RecyclerViewData, pos : Int) {
+                Toast.makeText(mainActivity,"${data.title}",Toast.LENGTH_SHORT).show()
+
+            }
+
+        })
+    }
 
 
 }
