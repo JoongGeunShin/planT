@@ -2,7 +2,7 @@ package com.example.plant.main_fragment
 
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -20,11 +20,17 @@ import com.example.plant.NaverSearch.LocationDTO
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraAnimation
+import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
+import pathfinder.NaverAPI
+import pathfinder.ResultPath
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -52,6 +58,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     private val SEARCH_SECRET_KEY = "VMmDTZuvfv"
     lateinit var recyclerViewAdapter : RecyclerViewAdapter
     val datas = mutableListOf<RecyclerViewData>()
+
+    //pathFinder
+    private val PATHFINDER_CLIENT_ID = "u04wstprb6"
+    private val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
 
     override fun onAttach(context:Context){
         super.onAttach(context)
@@ -95,6 +105,10 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 //        binding.tvLocation.text = "안녕"
 
         locationTextWatcher()
+
+        binding.btnFindWay.setOnClickListener {
+            pathFinder()
+        }
     }
 
     override fun onDestroyView() {
@@ -124,9 +138,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 text = binding.edtSearchLocation.text.toString()
 //                Toast.makeText(mainActivity, text,Toast.LENGTH_SHORT).show()
                 clearRecycler()
-                binding.btnFindWay.setOnClickListener {
-                    connectNaverSearch()
-                }
+//                binding.btnFindWay.setOnClickListener {
+//                    connectNaverSearch()
+//                }
 
 //                connectNaverSearch()
             }
@@ -189,6 +203,64 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
+    private fun pathFinder(){
+        val retrofit = Retrofit.Builder().
+        baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/").
+        addConverterFactory(GsonConverterFactory.create()).
+        build()
 
+        val api = retrofit.create(NaverAPI::class.java) // 여기까지 API 연결 세팅(Direction5)
+
+        //근처에서 길찾기
+        // 여기서 연결
+        val callgetPath =
+            api.getPath(PATHFINDER_CLIENT_ID, PATHFINDER_SECRET_KEY, "129.089441, 35.231100", "129.084454, 35.228982").also {
+
+                it.enqueue(/* callback = */ object : Callback<ResultPath> {
+                    override fun onResponse(
+                        call: Call<ResultPath>,
+                        response: Response<ResultPath>
+                    ) {
+                        var path_cords_list = response.body()?.route?.traoptimal
+                        //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
+                        val path = PathOverlay()
+                        //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
+                        val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
+                        for (path_cords in path_cords_list!!) {
+                            for (path_cords_xy in path_cords?.path!!) {
+                                //구한 경로를 하나씩 path_container에 추가해줌
+                                path_container?.add(LatLng(path_cords_xy[1], path_cords_xy[0]))
+                            }
+                        }
+                        //더미원소 드랍후 path.coords에 path들을 넣어줌.
+                        path.coords = path_container?.drop(1)!!
+                        path.color = Color.RED
+                        path.map = naverMap
+
+                        if(path.coords != null) {
+                            val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
+                                .animate(CameraAnimation.Fly, 3000)
+                            naverMap!!.moveCamera(cameraUpdate)
+
+                            Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResultPath>, t: Throwable) {
+                        Log.d(TAG, "ErrorPathFinder")
+                    }
+
+                })
+            }
+    }
 }
+
+
+
+
+
+
+
+
+
 
