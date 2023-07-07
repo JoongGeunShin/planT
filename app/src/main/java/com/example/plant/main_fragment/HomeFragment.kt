@@ -19,6 +19,7 @@ import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.LocationDTO
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
+import com.example.plant.R
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -39,12 +40,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 //, PermissionListener
-class HomeFragment : Fragment(), OnMapReadyCallback {
+class HomeFragment : Fragment(), FragmentListener,OnMapReadyCallback {
 
     lateinit var mainActivity: MainActivity
+
     // naver map
-    private lateinit var naverMap : NaverMap
+    private lateinit var naverMap: NaverMap
     private lateinit var mapFragment: MapFragment
+
     // 현재 위치 반환값
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
     private lateinit var locationSource: FusedLocationSource
@@ -56,14 +59,19 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     // recycler view
     private val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
     private val SEARCH_SECRET_KEY = "VMmDTZuvfv"
-    lateinit var recyclerViewAdapter : RecyclerViewAdapter
+    lateinit var recyclerViewAdapter: RecyclerViewAdapter
     val datas = mutableListOf<RecyclerViewData>()
 
     //pathFinder
     private val PATHFINDER_CLIENT_ID = "u04wstprb6"
     private val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
 
-    override fun onAttach(context:Context){
+    //프래그먼트 이동
+    private lateinit var mFragmentListener: FragmentListener
+    private var fragmentChild = MapFinderFragment()
+
+
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
 
@@ -86,6 +94,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 //        edt_searchLocation = view.findViewById(com.example.plant.R.id.edt_searchLocation)
 //        rv_items = view.findViewById(com.example.plant.R.id.rv_items)
 
+        //mapFinder 안보이게
+        hideMapFinder(true)
+
         return view
     }
 
@@ -93,6 +104,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         super.onViewCreated(view, savedInstanceState)
 
         val fm = childFragmentManager
+        //길찾기
+        fm.beginTransaction().add(R.id.frameLayoutMapFinder, fragmentChild).commit()
+
 
         // 지도 객체 선언
         mapFragment = fm.findFragmentById(com.example.plant.R.id.map_fragment) as MapFragment?
@@ -106,8 +120,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         locationTextWatcher()
 
+//        binding.btnFindWay.setOnClickListener {
+//            pathFinder()
+//        }
         binding.btnFindWay.setOnClickListener {
-            pathFinder()
+            mFragmentListener = MapFinderFragment()
+            hideMapFinder(false)
+//            mFragmentListener.onReceivedData("Parent -> Child")
         }
     }
 
@@ -129,8 +148,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
     }
 
-    public lateinit var text : String
-    private fun locationTextWatcher(){
+    public lateinit var text: String
+    private fun locationTextWatcher() {
         binding.edtSearchLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -146,7 +165,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                if(s.isNullOrEmpty()){
+                if (s.isNullOrEmpty()) {
                     clearRecycler()
                 }
 
@@ -154,7 +173,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-//    lateinit var searchAdapter: SearchAdapter
+    //    lateinit var searchAdapter: SearchAdapter
 //    val datas = mutableListOf<SearchData>()
     // 위 검색 토대로 recyclerview 생성
     private fun connectNaverSearch() {
@@ -165,56 +184,74 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
         val locationSearchInterface = retrofit.create(LocationSearchInterface::class.java)
 
-        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID,SEARCH_SECRET_KEY,text,5)
+        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID, SEARCH_SECRET_KEY, text, 5)
             .enqueue(object : Callback<LocationDTO> {
                 override fun onResponse(
                     call: Call<LocationDTO>,
                     response: Response<LocationDTO>
                 ) {
-                    if(response.isSuccessful.not()){
+                    if (response.isSuccessful.not()) {
                         return
                     }
-                    response.body()?.locations?.forEach{
-                        addRecycler(Html.fromHtml(it.title).toString(),it.category,it.description,it.roadAddress)
+                    response.body()?.locations?.forEach {
+                        addRecycler(
+                            Html.fromHtml(it.title).toString(),
+                            it.category,
+                            it.description,
+                            it.roadAddress
+                        )
                     }
                     recyclerViewAdapter.datas = datas
                 }
+
                 override fun onFailure(call: Call<LocationDTO>, t: Throwable) {
                     Log.d(TAG, "Connection ERROR")
                 }
             })
     }
-    private fun clearRecycler(){
+
+    private fun clearRecycler() {
         datas.clear()
     }
-    private fun addRecycler(title : String, category: String, description: String, roadAddress: String){
+
+    private fun addRecycler(
+        title: String,
+        category: String,
+        description: String,
+        roadAddress: String
+    ) {
         recyclerViewAdapter = RecyclerViewAdapter(mainActivity)
         binding.rvItems.adapter = recyclerViewAdapter
         datas.apply {
             add(RecyclerViewData(title, category, description, roadAddress))
         }
         // RecyclerclickEvent
-        recyclerViewAdapter.setOnItemClickListener(object : RecyclerViewAdapter.OnItemClickListener{
-            override fun onItemClick(v: View, data: RecyclerViewData, pos : Int) {
-                Toast.makeText(mainActivity,"${data.title}",Toast.LENGTH_SHORT).show()
+        recyclerViewAdapter.setOnItemClickListener(object :
+            RecyclerViewAdapter.OnItemClickListener {
+            override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
+                Toast.makeText(mainActivity, "${data.title}", Toast.LENGTH_SHORT).show()
 
             }
 
         })
     }
 
-    private fun pathFinder(){
-        val retrofit = Retrofit.Builder().
-        baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/").
-        addConverterFactory(GsonConverterFactory.create()).
-        build()
+    private fun pathFinder() {
+        val retrofit =
+            Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/")
+                .addConverterFactory(GsonConverterFactory.create()).build()
 
         val api = retrofit.create(NaverAPI::class.java) // 여기까지 API 연결 세팅(Direction5)
 
         //근처에서 길찾기
         // 여기서 연결
         val callgetPath =
-            api.getPath(PATHFINDER_CLIENT_ID, PATHFINDER_SECRET_KEY, "129.089441, 35.231100", "129.084454, 35.228982").also {
+            api.getPath(
+                PATHFINDER_CLIENT_ID,
+                PATHFINDER_SECRET_KEY,
+                "129.089441, 35.231100",
+                "129.084454, 35.228982"
+            ).also {
 
                 it.enqueue(/* callback = */ object : Callback<ResultPath> {
                     override fun onResponse(
@@ -236,11 +273,13 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         path.coords = path_container?.drop(1)!!
                         path.color = Color.RED
                         path.map = naverMap
+                        var path_size = path.coords.size
 
-                        if(path.coords != null) {
+                        if (path.coords != null) {
                             val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
                                 .animate(CameraAnimation.Fly, 3000)
                             naverMap!!.moveCamera(cameraUpdate)
+                            Log.d(TAG, "path size is ${path_size}")
 
                             Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT).show()
                         }
@@ -253,7 +292,17 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 })
             }
     }
+    // visible 설정
+    fun hideMapFinder(state:Boolean){
+        if(state) binding.frameLayoutMapFinder.visibility = View.GONE else binding.frameLayoutMapFinder.visibility=View.VISIBLE
+    }
+    //tvParent.text = data -> 바꿔야함
+    override fun onReceivedData(data: String) {
+//tvParent.text = data
+    }
 }
+
+
 
 
 

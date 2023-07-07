@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:text="@string/text_move_map_set_location"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
                 android:layout_margin="16dp"
                 android:hint="@string/search_text"
                 android:textColor="@color/black"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/btn_findWay"
                 app:layout_constraintStart_toStartOf="parent"
@@ -81,6 +81,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edt_searchLocation"
+                app:layout_constraintVertical_bias="0.442"
                 tools:listitem="@layout/item_recycler_naversearch" />
 
             <Button
@@ -88,10 +89,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:text="길찾기"
                 app:layout_constraintBottom_toBottomOf="@+id/edt_searchLocation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
+
+<!--            map_finder로 framelayout-->
+            <FrameLayout
+                android:id="@+id/frameLayoutMapFinder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
