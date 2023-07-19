@@ -1,4 +1,4 @@
-package pathfinder
+package com.example.plant.pathfinder
 
 data class ResultPath(
     val route : Result_trackoption,
