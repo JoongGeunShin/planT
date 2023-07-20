@@ -1,5 +1,6 @@
 package com.example.plant.main_fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +30,11 @@ class MapFinderFragment : Fragment(), FragmentListener {
     val mdatas = mutableListOf<RecyclerViewData>()
     lateinit var text: String
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainActivity = context as MainActivity
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,7 +55,7 @@ class MapFinderFragment : Fragment(), FragmentListener {
             (parentFragment as HomeFragment).hideMapFinder(true)
         }
         binding.btnMapFinder.setOnClickListener {
-//            mainActivity.pathFinder()
+            mainActivity.pathFinder()
         };
 
         //출발지, 도착지 setOnFocuseChangeListener로 포커스 될때 리사이클러뷰 나오게 설정 완료

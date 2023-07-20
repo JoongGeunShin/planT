@@ -3,6 +3,7 @@ package com.example.plant
 
 import android.app.Activity
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -204,7 +205,7 @@ open class MainActivity : AppCompatActivity() {
             RecyclerViewAdapter.OnItemClickListener {
             override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
                 Toast.makeText(this@MainActivity, "${data.title}", Toast.LENGTH_SHORT).show()
-
+//                intent.putExtra("",)
             }
 
         })

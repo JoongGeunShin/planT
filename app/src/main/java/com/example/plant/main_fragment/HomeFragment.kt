@@ -2,6 +2,7 @@ package com.example.plant.main_fragment
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -115,6 +116,7 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 //        binding.tvLocation.text = "안녕"
 
 
+        var searchLocationIntent = Intent()
         binding.edtSearchLocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (hasFocus) {
