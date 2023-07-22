@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar.DisplayOptions
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface LocationSearchInterface {
@@ -14,4 +15,5 @@ interface LocationSearchInterface {
         @Query("query") keyword: String,
         @Query("display") showCounts: Int
     ): Call<LocationDTO>
+
 }

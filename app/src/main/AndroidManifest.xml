@@ -23,6 +23,9 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="u04wstprb6" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="87d0e216500f0b44811c930b20af5dd8" />
         <activity
             android:name=".IntroActivity"
             android:exported="true">
