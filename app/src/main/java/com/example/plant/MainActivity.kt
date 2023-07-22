@@ -20,6 +20,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plant.NaverGeocode.GeocodeDTO
+import com.example.plant.NaverGeocode.GeocodeInterface
 import com.example.plant.NaverSearch.LocationDTO
 import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
@@ -36,7 +38,9 @@ import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.util.MarkerIcons
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -48,7 +52,6 @@ open class MainActivity : AppCompatActivity() {
 
     // naver map
     private lateinit var naverMap: NaverMap
-    private lateinit var mapFragment: MapFragment
 
     // recycler view
     val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
@@ -57,6 +60,10 @@ open class MainActivity : AppCompatActivity() {
     lateinit var targetRecyclerView: RecyclerView
     lateinit var targetActivity: Activity
     var datas = mutableListOf<RecyclerViewData>()
+    
+    //수정필요
+    var homeFragment: HomeFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as HomeFragment
+
 
     private val fl: FrameLayout by lazy {
         findViewById(R.id.mainFragmentContainer)
@@ -65,6 +72,15 @@ open class MainActivity : AppCompatActivity() {
     //pathFinder
     val PATHFINDER_CLIENT_ID = "u04wstprb6"
     val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+
+    // 마커 찍기
+    private val marker = Marker()
+
+    // Geocode
+    val GEOCODE_CLIENT_ID = "u04wstprb6"
+    val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+
+    lateinit var editText: EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,7 +194,11 @@ open class MainActivity : AppCompatActivity() {
                             Html.fromHtml(it.title).toString(),
                             it.category,
                             it.description,
-                            it.roadAddress
+                            it.roadAddress,
+                            it.mapx,
+                            it.mapy,
+                            it.address
+
                         )
                     }
                     recyclerViewAdapter.datas = datas.toMutableList()
@@ -195,17 +215,27 @@ open class MainActivity : AppCompatActivity() {
     }
 
     fun addRecycler(
-        title: String, category: String, description: String, roadAddress: String
+        title: String,
+        category: String,
+        description: String,
+        roadAddress: String,
+        mapx: String,
+        mapy: String,
+        address: String
     ) {
         datas.apply {
-            add(RecyclerViewData(title, category, description, roadAddress))
+            add(RecyclerViewData(title, category, description, roadAddress, mapx, mapy, address))
         }
         // RecyclerclickEvent
         recyclerViewAdapter.setOnItemClickListener(object :
             RecyclerViewAdapter.OnItemClickListener {
             override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
-                Toast.makeText(this@MainActivity, "${data.title}", Toast.LENGTH_SHORT).show()
-//                intent.putExtra("",)
+                //수정필요
+                editText.setText("")
+                editText.setHint(data.title)
+                homeFragment.Geocode(data.roadAddress)
+                Toast.makeText(this@MainActivity,"${data.roadAddress}",Toast.LENGTH_SHORT).show()
+                clearRecycler()
             }
 
         })
@@ -269,9 +299,9 @@ open class MainActivity : AppCompatActivity() {
             }
     }
 
+
     fun hideRecyclerView(recyclerView: RecyclerView, state: Boolean) {
         if (state) recyclerView.visibility = View.GONE else recyclerView.visibility = View.VISIBLE
     }
-
 
 }

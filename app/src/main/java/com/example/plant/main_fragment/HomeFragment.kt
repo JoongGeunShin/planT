@@ -1,9 +1,9 @@
 package com.example.plant.main_fragment
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -29,10 +29,9 @@ import com.example.plant.databinding.FragmentBottomnviHomeBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.geometry.LatLng
+
 import com.naver.maps.geometry.LatLngBounds
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraUpdate
+
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -51,9 +50,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 //, PermissionListener
-open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
+class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     lateinit var mainActivity: MainActivity
+    // 마커 찍기
+    private val marker = Marker()
+
+    // Geocode
+    val GEOCODE_CLIENT_ID = "u04wstprb6"
+    val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+
 
     // naver map
     private lateinit var naverMap: NaverMap
@@ -83,29 +89,17 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
 
     override fun onAttach(context: Context) {
-    // 마커 찍기
-    private val marker = Marker()
-
-    // Geocode
-    private val GEOCODE_CLIENT_ID = "u04wstprb6"
-    private val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
-    override fun onAttach(context: Context) {
         super.onAttach(context)
         mainActivity = context as MainActivity
-
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-//        val view = inflater.inflate(com.example.plant.R.layout.fragment_bottomnvi_home, container, false)
+
         _binding = FragmentBottomnviHomeBinding.inflate(inflater, container, false)
         val view = binding.root
-//        edt_searchLocation = view.findViewById(com.example.plant.R.id.edt_searchLocation)
-//        rv_items = view.findViewById(com.example.plant.R.id.rv_items)
 
         //mapFinder 안보이게
         hideMapFinder(true)
@@ -142,11 +136,13 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                     mainActivity.targetActivity = mainActivity
                     mainActivity.locationTextWatcher(binding.edtSearchLocation)
 
+                    mainActivity.editText = binding.edtSearchLocation
                 } else {
                     mainActivity.hideRecyclerView(binding.rvItems, true)
                 }
             }
         })
+
 
         binding.btnFindWay.setOnClickListener {
             mFragmentListener = MapFinderFragment()
@@ -176,15 +172,11 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         naverMap.onSymbolClickListener
         // 심볼클릭
         naverMap.setOnMapClickListener { point, coord ->
-            Toast.makeText(mainActivity, "${coord.latitude}, ${coord.longitude}",
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                mainActivity, "${coord.latitude}, ${coord.longitude}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-
-    // visible 설정
-    fun hideMapFinder(state: Boolean) {
-        if (state) binding.frameLayoutMapFinder.visibility =
-            View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
-    }
 
         naverMap.setOnSymbolClickListener { symbol ->
             if (symbol.caption == "롯데리아") {
@@ -200,125 +192,20 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     }
 
     lateinit var text: String
-    private fun locationTextWatcher() {
-        binding.edtSearchLocation.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
     //tvParent.text = data -> 바꿔야함
     override fun onReceivedData(data: String) {
 //tvParent.text = data
     }
-}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                text = binding.edtSearchLocation.text.toString()
-                clearRecycler()
-                connectNaverSearch()
-            }
 
-
-
-            override fun afterTextChanged(s: Editable?) {
-                if (s.isNullOrEmpty()) {
-                    clearRecycler()
-                }
-
-
-
-
-        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID, SEARCH_SECRET_KEY, text, 5)
-            .enqueue(object : Callback<LocationDTO> {
-                override fun onResponse(
-                    call: Call<LocationDTO>,
-                    response: Response<LocationDTO>
-                ) {
-                    if (response.isSuccessful.not()) {
-                        return
-                    }
-                    Log.d(TAG,"RAW: ${response.raw()}")
-                    Log.d(TAG,"BODY: ${response.body()}")
-                    response.body()?.locations?.forEach {
-                        addRecycler(
-                            Html.fromHtml(it.title).toString(),
-                            it.category,
-                            it.description,
-                            it.roadAddress,
-                            it.mapx,
-                            it.mapy,
-                            it.address
-                        )
-                    }
-                    recyclerViewAdapter.datas = datas
-                }
-
-                override fun onFailure(call: Call<LocationDTO>, t: Throwable) {
-                    Log.d(TAG, "Connection ERROR")
-                }
-            })
+    // visible 설정
+    fun hideMapFinder(state: Boolean) {
+        if (state) binding.frameLayoutMapFinder.visibility =
+            View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
     }
-
-    private fun clearRecycler() {
-        datas.clear()
-    }
-
-    private fun addRecycler(
-        title: String,
-        category: String,
-        description: String,
-        roadAddress: String,
-        mapx: String,
-        mapy: String,
-        address: String
-    ) {
-        recyclerViewAdapter = RecyclerViewAdapter(mainActivity)
-        binding.rvItems.adapter = recyclerViewAdapter
-        datas.apply {
-            add(RecyclerViewData(title, category, description, roadAddress, mapx, mapy, address))
-        }
-        // RecyclerclickEvent
-        recyclerViewAdapter.setOnItemClickListener(object :
-            RecyclerViewAdapter.OnItemClickListener {
-            override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
-                binding.edtSearchLocation.setText("")
-                binding.edtSearchLocation.setHint(data.title)
-                Geocode(data.roadAddress)
-                Toast.makeText(mainActivity,"${data.roadAddress}",Toast.LENGTH_SHORT).show()
-                clearRecycler()
-            }
-
-        })
-    }
-
-    private fun Geocode(address: String) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://naveropenapi.apigw.ntruss.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val GeocodeInterface = retrofit.create(GeocodeInterface::class.java)
-        val call = GeocodeInterface.getLocationByGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY, address)
-
-        call.enqueue(object : Callback<GeocodeDTO> {
-                override fun onResponse(
-                    call: Call<GeocodeDTO>,
-                    response: Response<GeocodeDTO>
-                ) {
-                    Log.d("Test", "Raw: ${response.raw()}")
-                    Log.d("Test", "Body: ${response.body()}")
-                    response.body()?.addresses?.forEach{
-                        val x = it.x
-                        val y = it.y
-                        moveToSearchedLocation(x.toDouble(),y.toDouble())
-                    }
-                }
-
-                override fun onFailure(call: Call<GeocodeDTO>, t: Throwable) {
-                    Log.d(TAG, "Connection ERROR")
-                }
-            })
-    }
-    private fun moveToSearchedLocation(x: Double, y: Double) {
+    fun moveToSearchedLocation(x: Double, y: Double) {
         val coord = LatLng(y, x)
-        Toast.makeText(mainActivity,"x:${x} and y:${y}",Toast.LENGTH_SHORT).show()
+        Toast.makeText(mainActivity, "x:${x} and y:${y}", Toast.LENGTH_SHORT).show()
         val cameraUpdate = CameraUpdate.scrollTo(coord).animate(CameraAnimation.Easing, 2000)
         naverMap.moveCamera(cameraUpdate)
 
@@ -329,6 +216,38 @@ open class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
         marker.captionText = "여기"
     }
+
+    fun Geocode(address: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://naveropenapi.apigw.ntruss.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val GeocodeInterface = retrofit.create(GeocodeInterface::class.java)
+        val call =
+            GeocodeInterface.getLocationByGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY, address)
+
+        call.enqueue(object : Callback<GeocodeDTO> {
+            override fun onResponse(
+                call: Call<GeocodeDTO>,
+                response: Response<GeocodeDTO>
+            ) {
+                Log.d("Test", "Raw: ${response.raw()}")
+                Log.d("Test", "Body: ${response.body()}")
+                response.body()?.addresses?.forEach {
+                    val x = it.x
+                    val y = it.y
+                    moveToSearchedLocation(x.toDouble(), y.toDouble())
+                }
+            }
+
+            override fun onFailure(call: Call<GeocodeDTO>, t: Throwable) {
+                Log.d(ContentValues.TAG, "Connection ERROR")
+            }
+        })
+    }
+}
+
     // 크롤링으로 데이터 가져올 예정
 
 
