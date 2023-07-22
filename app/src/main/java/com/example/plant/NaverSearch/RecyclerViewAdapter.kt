@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.R
+import org.jetbrains.anko.find
 
 class RecyclerViewAdapter (private val context: Context) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
@@ -39,18 +40,17 @@ class RecyclerViewAdapter (private val context: Context) : RecyclerView.Adapter<
         private val category: TextView = itemView.findViewById(R.id.tv_rv_category)
         private val description: TextView = itemView.findViewById(R.id.tv_rv_description)
         private val roadAddress: TextView = itemView.findViewById(R.id.tv_rv_roadAddress)
-
-//        private lateinit var mapX: String
-//        private lateinit var mapY: String
+        private val mapx: TextView = itemView.findViewById(R.id.tv_rv_mapx)
+        private val mapy: TextView = itemView.findViewById(R.id.tv_rv_mapy)
 
         fun bind(item: RecyclerViewData) {
             title.text = item.title
             category.text = item.category
             description.text = item.description
             roadAddress.text = item.roadAddress
+            mapx.text = item.mapx
+            mapy.text = item.mapy
 
-//            mapX = item.mapX
-//            mapY = item.mapY
             // 클릭 이벤트 위해
             val pos = adapterPosition
             if(pos!= RecyclerView.NO_POSITION)

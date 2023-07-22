@@ -38,7 +38,7 @@
                 android:gravity="center"
                 android:text="@string/text_move_map_set_location"
                 android:textColor="@color/black"
-                android:textSize="12dp"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -64,7 +64,7 @@
                 android:layout_margin="16dp"
                 android:hint="@string/search_text"
                 android:textColor="@color/black"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/btn_findWay"
                 app:layout_constraintStart_toStartOf="parent"
@@ -93,6 +93,14 @@
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
 
+            <RadioButton
+                android:id="@+id/radio_btn_cafe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="카페"
+                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
+                app:layout_constraintStart_toStartOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
