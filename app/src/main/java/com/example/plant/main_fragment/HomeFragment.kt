@@ -1,31 +1,29 @@
 package com.example.plant.main_fragment
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
+import android.nfc.Tag
 import android.os.Bundle
-import android.text.Editable
-import android.text.Html
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.annotation.NonNull
+import androidx.core.content.contentValuesOf
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.MainActivity
 import com.example.plant.NaverGeocode.GeocodeDTO
 import com.example.plant.NaverGeocode.GeocodeInterface
-import com.example.plant.NaverSearch.LocationDTO
-import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.R
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
+import com.example.plant.pathfinder.NaverAPI
+import com.example.plant.pathfinder.ResultPath
+import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -36,11 +34,9 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
-import com.example.plant.pathfinder.NaverAPI
-import com.example.plant.pathfinder.ResultPath
 import com.naver.maps.map.util.MarkerIcons
 import retrofit2.Call
 import retrofit2.Callback
@@ -87,6 +83,9 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     private lateinit var mFragmentListener: FragmentListener
     private var fragmentChild = MapFinderFragment()
 
+    //editText
+    lateinit var edtSearchLocation: EditText
+    lateinit var rvItems:RecyclerView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -109,7 +108,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val fm = childFragmentManager
         //길찾기
         fm.beginTransaction().add(R.id.frameLayoutMapFinder, fragmentChild).commit()
@@ -124,8 +122,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
 
-
-        var searchLocationIntent = Intent()
         binding.edtSearchLocation.setOnFocusChangeListener(object : View.OnFocusChangeListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (hasFocus) {
@@ -137,9 +133,14 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                     mainActivity.locationTextWatcher(binding.edtSearchLocation)
 
                     mainActivity.editText = binding.edtSearchLocation
-                } else {
-                    mainActivity.hideRecyclerView(binding.rvItems, true)
+                    edtSearchLocation = binding.edtSearchLocation
+                    rvItems = binding.rvItems
+
+
                 }
+//                else {
+//                    mainActivity.hideRecyclerView(binding.rvItems, true)
+//                }
             }
         })
 
@@ -198,26 +199,40 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 //tvParent.text = data
     }
 
+
+
     // visible 설정
     fun hideMapFinder(state: Boolean) {
         if (state) binding.frameLayoutMapFinder.visibility =
             View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
     }
-    fun moveToSearchedLocation(x: Double, y: Double) {
-        val coord = LatLng(y, x)
+    lateinit var coord: Coord
+    fun moveToSearchedLocation(x: Double, y: Double, type: String, boolean: Boolean) {
+        coord = LatLng(y, x)
+        if(type.contains("search")){
+            Toast.makeText(mainActivity,"냅둬",Toast.LENGTH_SHORT).show()
+        }else if(type.contains("start")){
+            mainActivity.startCoord = coord
+            Log.d(ContentValues.TAG,mainActivity.startCoord.toString())
+        }else if(type.contains("goal")){
+            mainActivity.goalCoord = coord
+            Log.d(ContentValues.TAG,mainActivity.goalCoord.toString())
+        }
         Toast.makeText(mainActivity, "x:${x} and y:${y}", Toast.LENGTH_SHORT).show()
-        val cameraUpdate = CameraUpdate.scrollTo(coord).animate(CameraAnimation.Easing, 2000)
-        naverMap.moveCamera(cameraUpdate)
+        if(boolean == true) {
+            val cameraUpdate = CameraUpdate.scrollTo(coord as LatLng).animate(CameraAnimation.Easing, 2000)
+            naverMap.moveCamera(cameraUpdate)
+        }
 
         // 잠깐 마커 테스트
-        marker.position = coord
+        marker.position = coord as LatLng
         marker.map = naverMap
         marker.icon = MarkerIcons.BLACK
         marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
         marker.captionText = "여기"
     }
 
-    fun Geocode(address: String) {
+    fun Geocode(address: String, type: String, boolean: Boolean) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -237,7 +252,12 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 response.body()?.addresses?.forEach {
                     val x = it.x
                     val y = it.y
-                    moveToSearchedLocation(x.toDouble(), y.toDouble())
+                    if(boolean == true) {
+                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type,true)
+                    }else{
+                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type,false)
+                    }
+
                 }
             }
 
@@ -246,6 +266,77 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
     }
+    fun pathFinder(startCoord: Coord, goalCoord: Coord) {
+        val retrofit =
+            Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/")
+                .addConverterFactory(GsonConverterFactory.create()).build()
+
+        val api = retrofit.create(NaverAPI::class.java) // 여기까지 API 연결 세팅(Direction5)
+
+        //근처에서 길찾기
+        // 여기서 연결
+        var startCoordString = startCoord.toString()
+        startCoordString = startCoordString.replace("LatLng{latitude=","")
+        startCoordString = startCoordString.replace("longitude=","")
+        startCoordString = startCoordString.replace("}","")
+        var goalCoordString = goalCoord.toString()
+        goalCoordString = goalCoordString.replace("LatLng{latitude=","")
+        goalCoordString = goalCoordString.replace("longitude=","")
+        goalCoordString = goalCoordString.replace("}","")
+
+        Log.d(ContentValues.TAG,"Start = ${startCoordString} Goal = ${goalCoordString}")
+            api.getPath(
+                PATHFINDER_CLIENT_ID,
+                PATHFINDER_SECRET_KEY,
+                "129.089441, 35.231100",
+      //          startCoordString,
+        //        goalCoordString
+                "129.084454, 35.228982"
+            ).also {
+
+                it.enqueue(/* callback = */ object : Callback<ResultPath> {
+                    override fun onResponse(
+                        call: Call<ResultPath>,
+                        response: Response<ResultPath>
+                    ) {
+                        var path_cords_list = response.body()?.route?.traoptimal
+                        //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
+                        val path = PathOverlay()
+                        //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
+                        val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
+                        for (path_cords in path_cords_list!!) {
+                            for (path_cords_xy in path_cords?.path!!) {
+                                //구한 경로를 하나씩 path_container에 추가해줌
+                                path_container?.add(LatLng(path_cords_xy[1], path_cords_xy[0]))
+                            }
+                        }
+                        //더미원소 드랍후 path.coords에 path들을 넣어줌.
+                        path.coords = path_container?.drop(1)!!
+                        path.color = Color.RED
+                        path.map = naverMap
+                        var path_size = path.coords.size
+
+                        if (path.coords != null) {
+                            val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
+                                .animate(CameraAnimation.Fly, 3000)
+                            naverMap!!.moveCamera(cameraUpdate)
+                            Log.d(ContentValues.TAG, "path size is ${path_size}")
+
+                            Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        Log.d(ContentValues.TAG,path.coords[0].toString())
+                    }
+
+                    override fun onFailure(call: Call<ResultPath>, t: Throwable) {
+                        Log.d(ContentValues.TAG, "ErrorPathFinder")
+                    }
+
+                })
+            }
+    }
+
 }
 
     // 크롤링으로 데이터 가져올 예정

@@ -22,6 +22,11 @@ class MapFinderFragment : Fragment(), FragmentListener {
     private val binding get() = _binding!!
     private lateinit var mFragmentListener: FragmentListener
 
+    //출발지, 목적지 editText, rv
+    lateinit var edtStartPoint: EditText
+    lateinit var rvstart:RecyclerView
+    lateinit var edtGoalPoint: EditText
+    lateinit var rvgoal:RecyclerView
 
     //리사이클러뷰
     private val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
@@ -29,6 +34,8 @@ class MapFinderFragment : Fragment(), FragmentListener {
     var recyclerViewAdapter: RecyclerViewAdapter = RecyclerViewAdapter(mainActivity)
     val mdatas = mutableListOf<RecyclerViewData>()
     lateinit var text: String
+
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -56,18 +63,24 @@ class MapFinderFragment : Fragment(), FragmentListener {
             (parentFragment as HomeFragment).hideMapFinder(true)
         }
         binding.btnMapFinder.setOnClickListener {
-            mainActivity.pathFinder()
-        };
+            (parentFragment as HomeFragment).pathFinder(mainActivity.startCoord, mainActivity.goalCoord)
+            (parentFragment as HomeFragment).hideMapFinder(true)
+        }
 
         //출발지, 도착지 setOnFocuseChangeListener로 포커스 될때 리사이클러뷰 나오게 설정 완료
         binding.edtStartPoint.setOnFocusChangeListener(object : OnFocusChangeListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (hasFocus) {
                     mainActivity.hideRecyclerView(binding.rvStart, false)
+                    recyclerViewAdapter = RecyclerViewAdapter(mainActivity)
                     binding.rvStart.adapter = recyclerViewAdapter
                     mainActivity.targetRecyclerView = binding.rvStart
                     mainActivity.targetActivity = mainActivity
                     mainActivity.locationTextWatcher(binding.edtStartPoint)
+
+                    mainActivity.editText = binding.edtStartPoint
+                    edtStartPoint = binding.edtStartPoint
+                    rvstart = binding.rvStart
 
                 } else {
                     mainActivity.hideRecyclerView(binding.rvStart, true)
@@ -79,10 +92,14 @@ class MapFinderFragment : Fragment(), FragmentListener {
             override fun onFocusChange(v: View?, hasFocus: Boolean) {
                 if (hasFocus) {
                     mainActivity.hideRecyclerView(binding.rvGoal, false)
+                    recyclerViewAdapter = RecyclerViewAdapter(mainActivity)
                     binding.rvGoal.adapter = recyclerViewAdapter
                     mainActivity.targetRecyclerView = binding.rvGoal
                     mainActivity.locationTextWatcher(binding.edtGoalPoint)
 
+                    mainActivity.editText = binding.edtGoalPoint
+                    edtGoalPoint = binding.edtGoalPoint
+                    rvgoal = binding.rvGoal
                 } else {
                     mainActivity.hideRecyclerView(binding.rvGoal, true)
                 }
@@ -97,6 +114,8 @@ class MapFinderFragment : Fragment(), FragmentListener {
 //        tvm.text = data
 
     }
+
+
 
 
 }

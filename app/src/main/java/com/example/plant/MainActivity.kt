@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
+import android.text.TextUtils.replace
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -19,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.NaverGeocode.GeocodeDTO
 import com.example.plant.NaverGeocode.GeocodeInterface
@@ -28,11 +30,13 @@ import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.main_fragment.CalendarFragment
 import com.example.plant.main_fragment.HomeFragment
+import com.example.plant.main_fragment.MapFinderFragment
 import com.example.plant.main_fragment.SettingsFragment
 import com.example.plant.main_fragment.UserinfoFragment
 import com.example.plant.pathfinder.NaverAPI
 import com.example.plant.pathfinder.ResultPath
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
@@ -51,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 open class MainActivity : AppCompatActivity() {
 
     // naver map
-    private lateinit var naverMap: NaverMap
+//    private lateinit var naverMap: NaverMap
 
     // recycler view
     val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
@@ -60,9 +64,6 @@ open class MainActivity : AppCompatActivity() {
     lateinit var targetRecyclerView: RecyclerView
     lateinit var targetActivity: Activity
     var datas = mutableListOf<RecyclerViewData>()
-    
-    //수정필요
-    var homeFragment: HomeFragment = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as HomeFragment
 
 
     private val fl: FrameLayout by lazy {
@@ -72,6 +73,8 @@ open class MainActivity : AppCompatActivity() {
     //pathFinder
     val PATHFINDER_CLIENT_ID = "u04wstprb6"
     val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+    lateinit var startCoord: Coord
+    lateinit var goalCoord: Coord
 
     // 마커 찍기
     private val marker = Marker()
@@ -231,72 +234,39 @@ open class MainActivity : AppCompatActivity() {
             RecyclerViewAdapter.OnItemClickListener {
             override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
                 //수정필요
-                editText.setText("")
-                editText.setHint(data.title)
-                homeFragment.Geocode(data.roadAddress)
-                Toast.makeText(this@MainActivity,"${data.roadAddress}",Toast.LENGTH_SHORT).show()
+                val homeFragment =
+                    supportFragmentManager.findFragmentById(R.id.mainFragmentContainer) as HomeFragment
+                var start = findViewById<EditText>(R.id.edt_startPoint)
+                var goal = findViewById<EditText>(R.id.edt_goalPoint)
+                var search = findViewById<EditText>(R.id.edt_searchLocation)
+                if (editText == search) {
+//                    editText.setText("")
+//                    editText.setHint(data.title)
+                    homeFragment.Geocode(roadAddress, "search", true)
+                    hideRecyclerView(homeFragment.rvItems, true)
+                    datas.clear()
+
+                } else if (editText == start) {
+                    editText.setText("")
+                    editText.setHint(data.title)
+                    homeFragment.Geocode(roadAddress, "start", false)
+                    datas.clear()
+//                    startCoord = homeFragment.coord
+
+                } else if (editText == goal) {
+                    editText.setText("")
+                    editText.setHint(data.title)
+                    homeFragment.Geocode(roadAddress, "goal", false)
+                    datas.clear()
+//                    goalCoord = homeFragment.coord
+                }
+
+                Toast.makeText(this@MainActivity, "${data.roadAddress}", Toast.LENGTH_SHORT).show()
                 clearRecycler()
+
             }
 
         })
-    }
-
-    fun pathFinder() {
-        val retrofit =
-            Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/")
-                .addConverterFactory(GsonConverterFactory.create()).build()
-
-        val api = retrofit.create(NaverAPI::class.java) // 여기까지 API 연결 세팅(Direction5)
-
-        //근처에서 길찾기
-        // 여기서 연결
-        val callgetPath =
-            api.getPath(
-                PATHFINDER_CLIENT_ID,
-                PATHFINDER_SECRET_KEY,
-                "129.089441, 35.231100",
-                "129.084454, 35.228982"
-            ).also {
-
-                it.enqueue(/* callback = */ object : Callback<ResultPath> {
-                    override fun onResponse(
-                        call: Call<ResultPath>,
-                        response: Response<ResultPath>
-                    ) {
-                        var path_cords_list = response.body()?.route?.traoptimal
-                        //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
-                        val path = PathOverlay()
-                        //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
-                        val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
-                        for (path_cords in path_cords_list!!) {
-                            for (path_cords_xy in path_cords?.path!!) {
-                                //구한 경로를 하나씩 path_container에 추가해줌
-                                path_container?.add(LatLng(path_cords_xy[1], path_cords_xy[0]))
-                            }
-                        }
-                        //더미원소 드랍후 path.coords에 path들을 넣어줌.
-                        path.coords = path_container?.drop(1)!!
-                        path.color = Color.RED
-                        path.map = naverMap
-                        var path_size = path.coords.size
-
-                        if (path.coords != null) {
-                            val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
-                                .animate(CameraAnimation.Fly, 3000)
-                            naverMap!!.moveCamera(cameraUpdate)
-                            Log.d(ContentValues.TAG, "path size is ${path_size}")
-
-                            Toast.makeText(this@MainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<ResultPath>, t: Throwable) {
-                        Log.d(ContentValues.TAG, "ErrorPathFinder")
-                    }
-
-                })
-            }
     }
 
 
