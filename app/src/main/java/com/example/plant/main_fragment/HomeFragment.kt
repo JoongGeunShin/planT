@@ -49,6 +49,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     lateinit var mainActivity: MainActivity
+
     // 마커 찍기
     private val marker = Marker()
 
@@ -85,7 +86,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     //editText
     lateinit var edtSearchLocation: EditText
-    lateinit var rvItems:RecyclerView
+    lateinit var rvItems: RecyclerView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -200,27 +201,28 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     }
 
 
-
     // visible 설정
     fun hideMapFinder(state: Boolean) {
         if (state) binding.frameLayoutMapFinder.visibility =
             View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
     }
+
     lateinit var coord: Coord
     fun moveToSearchedLocation(x: Double, y: Double, type: String, boolean: Boolean) {
         coord = LatLng(y, x)
-        if(type.contains("search")){
-            Toast.makeText(mainActivity,"냅둬",Toast.LENGTH_SHORT).show()
-        }else if(type.contains("start")){
+        if (type.contains("search")) {
+            Toast.makeText(mainActivity, "냅둬", Toast.LENGTH_SHORT).show()
+        } else if (type.contains("start")) {
             mainActivity.startCoord = coord
-            Log.d(ContentValues.TAG,mainActivity.startCoord.toString())
-        }else if(type.contains("goal")){
+            Log.d(ContentValues.TAG, mainActivity.startCoord.toString())
+        } else if (type.contains("goal")) {
             mainActivity.goalCoord = coord
-            Log.d(ContentValues.TAG,mainActivity.goalCoord.toString())
+            Log.d(ContentValues.TAG, mainActivity.goalCoord.toString())
         }
         Toast.makeText(mainActivity, "x:${x} and y:${y}", Toast.LENGTH_SHORT).show()
-        if(boolean == true) {
-            val cameraUpdate = CameraUpdate.scrollTo(coord as LatLng).animate(CameraAnimation.Easing, 2000)
+        if (boolean == true) {
+            val cameraUpdate =
+                CameraUpdate.scrollTo(coord as LatLng).animate(CameraAnimation.Easing, 2000)
             naverMap.moveCamera(cameraUpdate)
         }
 
@@ -252,10 +254,10 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 response.body()?.addresses?.forEach {
                     val x = it.x
                     val y = it.y
-                    if(boolean == true) {
-                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type,true)
-                    }else{
-                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type,false)
+                    if (boolean == true) {
+                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type, true)
+                    } else {
+                        moveToSearchedLocation(x.toDouble(), y.toDouble(), type, false)
                     }
 
                 }
@@ -266,6 +268,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
     }
+
     fun pathFinder(startCoord: Coord, goalCoord: Coord) {
         val retrofit =
             Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/")
@@ -276,70 +279,79 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         //근처에서 길찾기
         // 여기서 연결
         var startCoordString = startCoord.toString()
-        startCoordString = startCoordString.replace("LatLng{latitude=","")
-        startCoordString = startCoordString.replace("longitude=","")
-        startCoordString = startCoordString.replace("}","")
+        startCoordString = startCoordString.replace("LatLng{latitude=", "")
+        startCoordString = startCoordString.replace("longitude=", "")
+        startCoordString = startCoordString.replace("}", "")
+        var startCoordArr = startCoordString.split(",") //배열로써 스플릿함
+        var startCoordStr = (startCoordArr[1]+", "+startCoordArr[0])
+
         var goalCoordString = goalCoord.toString()
-        goalCoordString = goalCoordString.replace("LatLng{latitude=","")
-        goalCoordString = goalCoordString.replace("longitude=","")
-        goalCoordString = goalCoordString.replace("}","")
+        goalCoordString = goalCoordString.replace("LatLng{latitude=", "")
+        goalCoordString = goalCoordString.replace("longitude=", "")
+        goalCoordString = goalCoordString.replace("}", "")
+        var goalCoordArr = goalCoordString.split(",") //배열로써 스플릿함
+        var goalCoordStr = (goalCoordArr[1]+", "+goalCoordArr[0])
 
-        Log.d(ContentValues.TAG,"Start = ${startCoordString} Goal = ${goalCoordString}")
-            api.getPath(
-                PATHFINDER_CLIENT_ID,
-                PATHFINDER_SECRET_KEY,
-                "129.089441, 35.231100",
-      //          startCoordString,
-        //        goalCoordString
-                "129.084454, 35.228982"
-            ).also {
+        Log.d(ContentValues.TAG, "Start = ${startCoordString} Goal = ${goalCoordString}")
 
-                it.enqueue(/* callback = */ object : Callback<ResultPath> {
-                    override fun onResponse(
-                        call: Call<ResultPath>,
-                        response: Response<ResultPath>
-                    ) {
-                        var path_cords_list = response.body()?.route?.traoptimal
-                        //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
-                        val path = PathOverlay()
-                        //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
-                        val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
-                        for (path_cords in path_cords_list!!) {
-                            for (path_cords_xy in path_cords?.path!!) {
-                                //구한 경로를 하나씩 path_container에 추가해줌
-                                path_container?.add(LatLng(path_cords_xy[1], path_cords_xy[0]))
-                            }
-                        }
-                        //더미원소 드랍후 path.coords에 path들을 넣어줌.
-                        path.coords = path_container?.drop(1)!!
-                        path.color = Color.RED
-                        path.map = naverMap
-                        var path_size = path.coords.size
+        val callgetPath = api.getPath(
+            PATHFINDER_CLIENT_ID,
+            PATHFINDER_SECRET_KEY,
+//                "129.089441, 35.231100",
+//                "129.084454, 35.228982"
+            startCoordStr,
+            goalCoordStr
+//            "128.1159416, 35.1849007",
+//            "127.1447104, 37.4703325"
 
-                        if (path.coords != null) {
-                            val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
-                                .animate(CameraAnimation.Fly, 3000)
-                            naverMap!!.moveCamera(cameraUpdate)
-                            Log.d(ContentValues.TAG, "path size is ${path_size}")
+        )
 
-                            Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-
-                        Log.d(ContentValues.TAG,path.coords[0].toString())
+        callgetPath.enqueue(/* callback = */ object : Callback<ResultPath> {
+            override fun onResponse(
+                call: Call<ResultPath>,
+                response: Response<ResultPath>
+            ) {
+                var path_cords_list = response.body()?.route?.traoptimal
+                //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
+                val path = PathOverlay()
+                //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
+                val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
+                for (path_cords in path_cords_list!!) {
+                    for (path_cords_xy in path_cords?.path!!) {
+                        //구한 경로를 하나씩 path_container에 추가해줌
+                        path_container?.add(LatLng(path_cords_xy[1], path_cords_xy[0]))
                     }
+                }
+                //더미원소 드랍후 path.coords에 path들을 넣어줌.
+                path.coords = path_container?.drop(1)!!
+                path.color = Color.RED
+                path.map = naverMap
+                var path_size = path.coords.size
 
-                    override fun onFailure(call: Call<ResultPath>, t: Throwable) {
-                        Log.d(ContentValues.TAG, "ErrorPathFinder")
-                    }
+                if (path.coords != null) {
+                    val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
+                        .animate(CameraAnimation.Fly, 3000)
+                    naverMap!!.moveCamera(cameraUpdate)
+                    Log.d(ContentValues.TAG, "path size is ${path_size}")
 
-                })
+                    Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                Log.d(ContentValues.TAG, path.coords[0].toString())
             }
+
+            override fun onFailure(call: Call<ResultPath>, t: Throwable) {
+                Log.d(ContentValues.TAG, "ErrorPathFinder")
+            }
+
+        })
+
     }
 
 }
 
-    // 크롤링으로 데이터 가져올 예정
+// 크롤링으로 데이터 가져올 예정
 
 
 
