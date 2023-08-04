@@ -82,6 +82,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edt_searchLocation"
+                app:layout_constraintVertical_bias="0.442"
                 tools:listitem="@layout/item_recycler_naversearch" />
 
             <Button
@@ -89,19 +90,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
+                android:text="길찾기"
                 app:layout_constraintBottom_toBottomOf="@+id/edt_searchLocation"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
 
-            <RadioButton
-                android:id="@+id/radio_btn_cafe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="카페"
-                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
-                app:layout_constraintStart_toStartOf="parent"/>
+            <!--            map_finder로 framelayout-->
+            <FrameLayout
+                android:id="@+id/frameLayoutMapFinder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>

@@ -4,17 +4,20 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.R
 import org.jetbrains.anko.find
 
-class RecyclerViewAdapter (private val context: Context) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+class RecyclerViewAdapter(private val context: Context) :
+    RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     var datas = mutableListOf<RecyclerViewData>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(context).inflate(R.layout.item_recycler_naversearch, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_recycler_naversearch, parent, false)
         return ViewHolder(view)
     }
 
@@ -23,15 +26,18 @@ class RecyclerViewAdapter (private val context: Context) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(datas[position])
     }
+
     // <-- 클릭 이벤트
     // ListView와 다르게 클릭 리스너가 내장되지 않아 설정
-    interface OnItemClickListener{
-        fun onItemClick(v:View, data: RecyclerViewData, pos : Int)
+    interface OnItemClickListener {
+        fun onItemClick(v: View, data: RecyclerViewData, pos: Int)
     }
-    private var listener : OnItemClickListener? = null
-    fun setOnItemClickListener(listener : OnItemClickListener) {
+
+    private var listener: OnItemClickListener? = null
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         this.listener = listener
     }
+
 
     // --> 클릭 이벤트
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -53,10 +59,9 @@ class RecyclerViewAdapter (private val context: Context) : RecyclerView.Adapter<
 
             // 클릭 이벤트 위해
             val pos = adapterPosition
-            if(pos!= RecyclerView.NO_POSITION)
-            {
+            if (pos != RecyclerView.NO_POSITION) {
                 itemView.setOnClickListener {
-                    listener?.onItemClick(itemView,item,pos)
+                    listener?.onItemClick(itemView, item, pos)
                 }
             }
         }

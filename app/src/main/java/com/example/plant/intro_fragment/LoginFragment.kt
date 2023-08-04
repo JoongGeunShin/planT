@@ -101,6 +101,8 @@ class LoginFragment : Fragment() {
 //                    startActivity(intent)
 //                }
 //            }
+//            val intent = Intent(introActivity,MainActivity::class.java)
+//            startActivity(intent)
             val intent = Intent(introActivity,MainActivity::class.java)
             startActivity(intent)
         }
