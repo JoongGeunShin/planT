@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //tet
 
         val bnv_main = findViewById<BottomNavigationView>(R.id.bnv_main)
         bnv_main.setOnItemSelectedListener { item ->
