@@ -3,6 +3,7 @@ package com.example.plant.main_fragment
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Color
+import android.graphics.PointF
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
@@ -12,7 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.NonNull
+import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import com.example.plant.MainActivity
 import com.example.plant.NaverGeocode.GeocodeDTO
@@ -22,6 +23,7 @@ import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
+import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
@@ -30,9 +32,13 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.Pickable
+import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import org.jetbrains.anko.coroutines.experimental.asReference
+import org.jetbrains.anko.internals.AnkoInternals.createAnkoContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,7 +71,8 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     // 마커 찍기
     private val marker = Marker()
-
+    private val targetMarker = Marker()
+    private val captionMarkersArrayList = ArrayList<Marker>()
     // Geocode
     private val GEOCODE_CLIENT_ID = "u04wstprb6"
     private val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
@@ -105,10 +112,43 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         // onMapReady 호출
         mapFragment.getMapAsync(this)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
+        var count = 0;
         binding.btnFindWay.setOnClickListener {
-            Geocode("소녀다방")
+//            Geocode("소녀다방")
+//            Log.d(TAG,naverMap.cameraPosition.toString())
+            val point = PointF(naverMap.cameraPosition.target.latitude.toFloat(), naverMap.cameraPosition.target.longitude.toFloat())
+            Log.d(TAG,point.toString())
+            val captionDataMutable = naverMap.pickAll(point,300)
+//            val captionDataList = captionDataMutable.toList()
+//            captionDataList.forEach {
+//                it.
+//            }
+            val pointMarker = Marker()
+            captionDataMutable.forEach{
+                val captionDataString = it.toString()
+
+                val captionLatitude = captionDataString.substring(captionDataString.indexOf("latitude")+9,captionDataString.indexOf("longitude")-2)
+                val captionLongitude = captionDataString.substring(captionDataString.indexOf("longitude")+10,captionDataString.indexOf("caption")-3)
+                val captionName = captionDataString.substring(captionDataString.indexOf("caption")+9,captionDataString.length-2)
+                Log.d(TAG,captionDataString)
+                Log.d(TAG,"Pointmarker Class .. latitude = ${captionLatitude} longitude = ${captionLongitude} caption = ${captionName}")
+
+                pointMarker.position = LatLng(captionLatitude.toDouble(),captionLongitude.toDouble())
+                pointMarker.map = naverMap
+
+//                val captionMarker = Marker()
+//                captionMarkersArrayList.add(count,captionMarker)
+//                captionMarkersArrayList.get(count).position = LatLng(captionLatitude.toDouble(),captionLongitude.toDouble())
+//                captionMarkersArrayList.get(count).map = naverMap
+//                captionMarkersArrayList.get(count).icon = MarkerIcons.BLACK
+//                captionMarkersArrayList.get(count).iconTintColor = Color.RED // 현재위치 마커 빨간색으로
+//                captionMarkersArrayList.get(count).captionText = "captionName"
+//                count++
+            }
+            Log.d(TAG,count.toString())
+
         }
+
         locationTextWatcher()
     }
 
@@ -130,6 +170,21 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         uiSettings.isLocationButtonEnabled = true
         naverMap.locationTrackingMode = LocationTrackingMode.Follow
 
+
+        val point = PointF(naverMap.cameraPosition.target.longitude.toFloat(), naverMap.cameraPosition.target.latitude.toFloat())
+        val testpoint = LatLng(point.x.toDouble(),point.y.toDouble())
+        Log.d(TAG,testpoint.toString())
+        val test = naverMap.pickAll(point,3000)
+        val pointMarker = Marker()
+//        test.forEach{
+//            pointMarker.position =
+//            marker.map = naverMap
+//            marker.icon = MarkerIcons.BLACK
+//            marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
+//            marker.captionText = "여기"
+//
+//        }
+
         naverMap.onSymbolClickListener
         // 심볼클릭
         naverMap.setOnMapClickListener { point, coord ->
@@ -137,17 +192,23 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 Toast.LENGTH_SHORT).show()
         }
 
-
         naverMap.setOnSymbolClickListener { symbol ->
-            if (symbol.caption == "롯데리아") {
-                Toast.makeText(mainActivity, "${symbol.caption}", Toast.LENGTH_SHORT).show()
-                // 이벤트 소비, OnMapClick 이벤트는 발생하지 않음
+            if (!symbol.caption.isDigitsOnly()) {
+//                val marker = Marker()
+//                Toast.makeText(mainActivity, "${symbol.caption}", Toast.LENGTH_SHORT).show()
+//                symbol.position
+                Toast.makeText(mainActivity, "심볼클릭 리스너 : ${symbol.position}", Toast.LENGTH_SHORT).show()
+//                val markertest2 = Marker()
+//                markertest2.position = symbol.position
+//                markertest2.map = naverMap
+
                 true
             } else {
                 // 이벤트 전파, OnMapClick 이벤트가 발생함
                 false
             }
         }
+
 
     }
 
@@ -236,7 +297,9 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             override fun onItemClick(v: View, data: RecyclerViewData, pos: Int) {
                 binding.edtSearchLocation.setText("")
                 binding.edtSearchLocation.setHint(data.title)
-                Geocode(data.roadAddress)
+                Geocode(data.roadAddress,data.title)
+
+
                 Toast.makeText(mainActivity,"${data.roadAddress}",Toast.LENGTH_SHORT).show()
                 clearRecycler()
             }
@@ -244,7 +307,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-    private fun Geocode(address: String) {
+    private fun Geocode(address: String, name: String) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -263,7 +326,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                     response.body()?.addresses?.forEach{
                         val x = it.x
                         val y = it.y
-                        moveToSearchedLocation(x.toDouble(),y.toDouble())
+                        moveToSearchedLocation(x.toDouble(),y.toDouble(), name)
                     }
                 }
 
@@ -272,20 +335,51 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
             })
     }
-    private fun moveToSearchedLocation(x: Double, y: Double) {
-        val coord = LatLng(y, x)
+    private fun moveToSearchedLocation(x: Double, y: Double, name: String) {
+        var coord = LatLng(y, x)
+        var flag : Boolean
         Toast.makeText(mainActivity,"x:${x} and y:${y}",Toast.LENGTH_SHORT).show()
         val cameraUpdate = CameraUpdate.scrollTo(coord).animate(CameraAnimation.Easing, 2000)
         naverMap.moveCamera(cameraUpdate)
-
+        val point = PointF(naverMap.cameraPosition.target.latitude.toFloat(), naverMap.cameraPosition.target.longitude.toFloat())
+        val captionDataMutable = naverMap.pickAll(point,30)
         // 잠깐 마커 테스트
-        marker.position = coord
-        marker.map = naverMap
-        marker.icon = MarkerIcons.BLACK
-        marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
-        marker.captionText = "여기"
+        captionDataMutable.forEach {
+            val captionDataString = it.toString()
+            val captionName = captionDataString.substring(
+                captionDataString.indexOf("caption") + 9,
+                captionDataString.length - 2
+            )
+            if (captionName.contains(name)) {
+                val captionLatitude = captionDataString.substring(
+                    captionDataString.indexOf("latitude") + 9,
+                    captionDataString.indexOf("longitude") - 2
+                )
+                val captionLongitude = captionDataString.substring(
+                    captionDataString.indexOf("longitude") + 10,
+                    captionDataString.indexOf("caption") - 3
+                )
+                coord = LatLng(captionLatitude.toDouble(), captionLongitude.toDouble())
+                val marker = Marker()
+                marker.position = coord
+                marker.map = naverMap
+                marker.icon = MarkerIcons.BLUE
+                marker.iconTintColor = Color.BLUE
+                marker.captionText = name
+            }
+        }
     }
-    // 크롤링으로 데이터 가져올 예정
+
+//    private fun setCaptionToMarker(captionDatas: MutableList<Pickable>){
+////        marker.position = coord
+//        marker.map = naverMap
+//        marker.icon = MarkerIcons.BLACK
+//        marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
+//        marker.captionText = "여기"
+////        captionDatas.forEach{
+////            marker.position = it
+////        }
+//    }
 
 }
 
