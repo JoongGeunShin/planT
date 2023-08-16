@@ -3,7 +3,6 @@ package com.example.plant.main_fragment
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.contentValuesOf
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.MainActivity
@@ -94,8 +92,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
 
         _binding = FragmentBottomnviHomeBinding.inflate(inflater, container, false)
@@ -145,7 +142,30 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
 
+        //카메라 이동 버튼 setOnClickListener
+        binding.btnFirstCamera.setOnClickListener {
+            firstCamera()
+        }
 
+        binding.btnNextCamera.setOnClickListener {
+            stackOfCamera += 1
+            if (path.coords.size < stackOfCamera * 60) {
+                val cameraUpdate = CameraUpdate.scrollTo(mainActivity.goalCoord as LatLng)
+                naverMap.moveCamera(cameraUpdate)
+                stackOfCamera = -1
+            } else {
+                nextCamera()
+            }
+        }
+        binding.btnPrevCamera.setOnClickListener {
+            stackOfCamera -= 1
+            if (stackOfCamera < 0) {
+                stackOfCamera = 0
+            }
+            prevCamera()
+        }
+
+        //길찾기 setOnclickListener
         binding.btnFindWay.setOnClickListener {
             mFragmentListener = MapFinderFragment()
             hideMapFinder(false)
@@ -175,8 +195,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         // 심볼클릭
         naverMap.setOnMapClickListener { point, coord ->
             Toast.makeText(
-                mainActivity, "${coord.latitude}, ${coord.longitude}",
-                Toast.LENGTH_SHORT
+                mainActivity, "${coord.latitude}, ${coord.longitude}", Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -235,10 +254,8 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     }
 
     fun Geocode(address: String, type: String, boolean: Boolean) {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://naveropenapi.apigw.ntruss.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
 
         val GeocodeInterface = retrofit.create(GeocodeInterface::class.java)
         val call =
@@ -246,8 +263,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
         call.enqueue(object : Callback<GeocodeDTO> {
             override fun onResponse(
-                call: Call<GeocodeDTO>,
-                response: Response<GeocodeDTO>
+                call: Call<GeocodeDTO>, response: Response<GeocodeDTO>
             ) {
                 Log.d("Test", "Raw: ${response.raw()}")
                 Log.d("Test", "Body: ${response.body()}")
@@ -269,6 +285,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
     }
 
+    val path = PathOverlay()
     fun pathFinder(startCoord: Coord, goalCoord: Coord) {
         val retrofit =
             Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/map-direction/")
@@ -283,37 +300,29 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         startCoordString = startCoordString.replace("longitude=", "")
         startCoordString = startCoordString.replace("}", "")
         var startCoordArr = startCoordString.split(",") //배열로써 스플릿함
-        var startCoordStr = (startCoordArr[1]+", "+startCoordArr[0])
+        var startCoordStr = (startCoordArr[1] + ", " + startCoordArr[0])
 
         var goalCoordString = goalCoord.toString()
         goalCoordString = goalCoordString.replace("LatLng{latitude=", "")
         goalCoordString = goalCoordString.replace("longitude=", "")
         goalCoordString = goalCoordString.replace("}", "")
         var goalCoordArr = goalCoordString.split(",") //배열로써 스플릿함
-        var goalCoordStr = (goalCoordArr[1]+", "+goalCoordArr[0])
+        var goalCoordStr = (goalCoordArr[1] + ", " + goalCoordArr[0])
 
         Log.d(ContentValues.TAG, "Start = ${startCoordString} Goal = ${goalCoordString}")
 
         val callgetPath = api.getPath(
-            PATHFINDER_CLIENT_ID,
-            PATHFINDER_SECRET_KEY,
-//                "129.089441, 35.231100",
-//                "129.084454, 35.228982"
-            startCoordStr,
-            goalCoordStr
-//            "128.1159416, 35.1849007",
-//            "127.1447104, 37.4703325"
-
+            PATHFINDER_CLIENT_ID, PATHFINDER_SECRET_KEY,
+            startCoordStr, goalCoordStr
         )
 
         callgetPath.enqueue(/* callback = */ object : Callback<ResultPath> {
             override fun onResponse(
-                call: Call<ResultPath>,
-                response: Response<ResultPath>
+                call: Call<ResultPath>, response: Response<ResultPath>
             ) {
                 var path_cords_list = response.body()?.route?.traoptimal
                 //경로 그리기 응답바디가 List<List<Double>> 이라서 2중 for문 썼음
-                val path = PathOverlay()
+//                val path = PathOverlay()
                 //MutableList에 add 기능 쓰기 위해 더미 원소 하나 넣어둠
                 val path_container: MutableList<LatLng>? = mutableListOf(LatLng(0.1, 0.1))
                 for (path_cords in path_cords_list!!) {
@@ -329,13 +338,12 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 var path_size = path.coords.size
 
                 if (path.coords != null) {
-                    val cameraUpdate = CameraUpdate.scrollTo(path.coords[0]!!)
-                        .animate(CameraAnimation.Fly, 3000)
+                    val cameraUpdate =
+                        CameraUpdate.scrollTo(path.coords[0]!!).animate(CameraAnimation.Fly, 3000)
                     naverMap!!.moveCamera(cameraUpdate)
                     Log.d(ContentValues.TAG, "path size is ${path_size}")
 
-                    Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(mainActivity, "경로 안내가 시작됩니다.", Toast.LENGTH_SHORT).show()
                 }
 
                 Log.d(ContentValues.TAG, path.coords[0].toString())
@@ -348,6 +356,30 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
 
     }
+
+    //카메라 이동 (이전, 처음, 다음)
+    fun firstCamera() {
+        //여기 바꿔야함
+        val cameraUpdate = CameraUpdate.scrollTo(mainActivity.startCoord as LatLng)
+        //여기에 path_cords_list 소분해서 ㄱㄱ
+        var path_size = path.coords.size
+        naverMap.moveCamera(cameraUpdate)
+        Log.d(ContentValues.TAG, "path size is ${path_size}")
+    }
+
+    var stackOfCamera = 0
+    fun nextCamera() {
+        var nextStep = path.coords[stackOfCamera * 60]
+        val cameraUpdate = CameraUpdate.scrollTo(nextStep as LatLng)
+        naverMap.moveCamera(cameraUpdate)
+    }
+
+    fun prevCamera() {
+        var prevStep = path.coords[stackOfCamera * 60]
+        val cameraUpdate = CameraUpdate.scrollTo(prevStep as LatLng)
+        naverMap.moveCamera(cameraUpdate)
+    }
+
 
 }
 
