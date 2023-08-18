@@ -34,7 +34,6 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
-import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
@@ -62,7 +61,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     // naver map
     private lateinit var naverMap: NaverMap
     private lateinit var mapFragment: MapFragment
-    private val circleOverlay = CircleOverlay() // circle overlay
 
     // 현재 위치 반환값
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -141,32 +139,20 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
 
                 }
+//                else {
+//                    mainActivity.hideRecyclerView(binding.rvItems, true)
+//                }
             }
         })
+
 
         binding.btnFindWay.setOnClickListener {
             mFragmentListener = MapFinderFragment()
             hideMapFinder(false)
 //            mFragmentListener.onReceivedData("Parent -> Child")
         }
-
-        // 위치에서 탐색하기 클릭시 뜨게 하기
-        binding.btnFindMapItems.setOnClickListener {
-            Toast.makeText(mainActivity,"위치에서 탐색하기 버튼 click",Toast.LENGTH_SHORT).show()
-            // 현재 위치 중심을 토대로 원 생성
-            circleOverlay.center = naverMap.cameraPosition.target
-            circleOverlay.outlineWidth = 12
-            circleOverlay.radius = 1000.0
-            circleOverlay.color = 0
-            Log.d(tag,circleOverlay.globalZIndex.toString())
-            circleOverlay.map = naverMap
-
-//            markerTest.set
-        }
-
-
     }
-    val markerTest = Marker()
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -204,7 +190,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 false
             }
         }
-//        val circleOverlay = CircleOverlay(naverMap.cameraPosition.target, 32.0)
+
     }
 
     lateinit var text: String

@@ -96,6 +96,33 @@
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
 
+            <Button
+                android:id="@+id/btn_firstCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="처음"
+                app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintStart_toEndOf="@id/btn_prevCamera" />
+
+            <Button
+                android:id="@+id/btn_nextCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="다음"
+                app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintStart_toEndOf="@id/btn_firstCamera" />
+
+            <Button
+                android:id="@+id/btn_prevCamera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp"
+                android:text="이전"
+                app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <!--            map_finder로 framelayout-->
             <FrameLayout
                 android:id="@+id/frameLayoutMapFinder"
