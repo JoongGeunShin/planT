@@ -65,6 +65,7 @@ class MapFinderFragment : Fragment(), FragmentListener {
         binding.btnMapFinder.setOnClickListener {
             (parentFragment as HomeFragment).pathFinder(mainActivity.startCoord, mainActivity.goalCoord)
             (parentFragment as HomeFragment).hideMapFinder(true)
+            (parentFragment as HomeFragment).hideCameraAct(false)
         }
 
         //출발지, 도착지 setOnFocuseChangeListener로 포커스 될때 리사이클러뷰 나오게 설정 완료

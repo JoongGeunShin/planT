@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="bottomnvi_home"
             type="com.example.plant.main_fragment.HomeFragment" />
@@ -95,31 +96,42 @@
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_firstCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="처음"
+                android:src="@drawable/ic_arrow_refresh"
+                android:backgroundTint="@color/blank"
+                android:visibility="invisible"
+
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toStartOf="@id/btn_nextCamera"
                 app:layout_constraintStart_toEndOf="@id/btn_prevCamera" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_nextCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="다음"
+                android:layout_marginRight="70dp"
+                android:src="@drawable/ic_arrow_right"
+                android:backgroundTint="@color/blank"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_firstCamera" />
+            />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_prevCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
-                android:text="이전"
+                android:layout_marginLeft="70dp"
+                android:src="@drawable/ic_arrow_left"
+                android:backgroundTint="@color/blank"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toStartOf="@id/btn_firstCamera"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <!--            map_finder로 framelayout-->
@@ -127,8 +139,9 @@
                 android:id="@+id/frameLayoutMapFinder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF" />
-
+                android:background="#FFFFFF"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
