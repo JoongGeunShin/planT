@@ -181,7 +181,7 @@ open class MainActivity : AppCompatActivity() {
 
         val locationSearchInterface = retrofit.create(LocationSearchInterface::class.java)
 
-        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID, SEARCH_SECRET_KEY, text, 5)
+        locationSearchInterface.getLocationByName(SEARCH_CLIENT_ID, SEARCH_SECRET_KEY, text, 1)
             .enqueue(object : Callback<LocationDTO> {
                 override fun onResponse(
                     call: Call<LocationDTO>,

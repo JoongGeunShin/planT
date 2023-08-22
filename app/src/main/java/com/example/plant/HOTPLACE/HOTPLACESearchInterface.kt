@@ -1,16 +1,18 @@
-package com.example.plant.NaverSearch
+package com.example.plant.HOTPLACE
 
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-interface CafeSearchInterface {
+interface HOTPLACESearchInterface {
     @GET("/v1/search/local")
-    fun getCafeByLocation(
+    fun getHOTPLACEByLocation(
         @Header("X-Naver-Client-Id") id: String,
         @Header("X-Naver-Client-Secret") secretKey: String,
         @Query("query") keyword: String,
-        @Query("display") showCounts: Int
-    ): Call<LocationDTO>
+        @Query("display") display: Int = 10,
+        @Query("sort") sort: String = "comment"
+    ): Call<HOTPLACEDTO>
+
 }
