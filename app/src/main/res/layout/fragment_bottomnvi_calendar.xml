@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="bottomnvi_calendar"
-            type="com.example.plant.main_fragment.CalendarFragment" />
+            type="com.example.plant.main_fragment.calendar.CalendarFragment" />
     </data>
 
     <FrameLayout
@@ -22,15 +23,12 @@
 
             <CalendarView
                 android:id="@+id/calendarView"
-                android:layout_width="379dp"
-                android:layout_height="317dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.488"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/saveBtn" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_plus" />
 
             <TextView
                 android:id="@+id/diaryTextView"
@@ -95,8 +93,8 @@
             <!--            app:layout_constraintStart_toStartOf="parent"-->
             <!--            app:layout_constraintTop_toBottomOf="@id/saveBtn" />-->
 
-            <Button
-                android:id="@+id/saveBtn"
+            <ImageButton
+                android:id="@+id/btn_plus"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -105,36 +103,60 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="20dp"
-                android:text="저장"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_button_plus"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/updateBtn"
-                android:layout_width="180dp"
+            <ImageButton
+                android:id="@+id/btn_update"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="수정"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_button_update"
                 android:visibility="invisible"
-                app:layout_constraintBaseline_toBaselineOf="@+id/saveBtn"
-                app:layout_constraintEnd_toStartOf="@+id/deleteBtn"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_delete"
+                app:layout_constraintEnd_toEndOf="@+id/btn_delete" />
 
-            <Button
-                android:id="@+id/deleteBtn"
-                android:layout_width="176dp"
+            <ImageButton
+                android:id="@+id/btn_complete"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="삭제"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_button_complete"
                 android:visibility="invisible"
-                app:layout_constraintBaseline_toBaselineOf="@+id/updateBtn"
-                app:layout_constraintEnd_toEndOf="@+id/saveBtn"></Button>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <ImageButton
+                android:id="@+id/btn_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="20dp"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_button_delete"
+                android:visibility="invisible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btn_plus"></ImageButton>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </layout>

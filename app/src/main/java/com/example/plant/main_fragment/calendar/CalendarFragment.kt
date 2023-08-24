@@ -1,4 +1,4 @@
-package com.example.plant.main_fragment
+package com.example.plant.main_fragment.calendar
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -39,26 +39,39 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
         return  view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.calendarView.setOnDateChangeListener{ view, year, month, dayOfMonth ->
             binding.diaryTextView.visibility = View.VISIBLE
-            binding.saveBtn.visibility = View.VISIBLE
-            binding.contextEditText.visibility = View.VISIBLE
+            binding.btnPlus.visibility = View.VISIBLE
+            binding.contextEditText.visibility = View.INVISIBLE
             binding.diaryContent.visibility = View.INVISIBLE
-            binding.updateBtn.visibility = View.INVISIBLE
-            binding.deleteBtn.visibility = View.INVISIBLE
+            binding.btnUpdate.visibility = View.INVISIBLE
+            binding.btnDelete.visibility = View.INVISIBLE
+            binding.btnComplete.visibility = View.INVISIBLE
             binding.diaryTextView.text = String.format("%d / %d / %d", year, month + 1, dayOfMonth)
             binding.contextEditText.setText("")
             checkDay(year, month, dayOfMonth, userID)
         }
-        binding.saveBtn.setOnClickListener {
+        binding.btnPlus.setOnClickListener {
+            binding.contextEditText.visibility = View.VISIBLE
+            binding.btnPlus.visibility = View.INVISIBLE
+            binding.btnComplete.visibility = View.VISIBLE
+            binding.btnUpdate.visibility = View.INVISIBLE
+            binding.btnDelete.visibility = View.INVISIBLE
+//            str = binding.contextEditText.text.toString()
+//            binding.diaryContent.text = str
+//            binding.diaryContent.visibility = View.VISIBLE
+        }
+        binding.btnComplete.setOnClickListener {
             saveDiary(fname)
-            binding.contextEditText.visibility = View.INVISIBLE
-            binding.saveBtn.visibility = View.INVISIBLE
-            binding.updateBtn.visibility = View.VISIBLE
-            binding.deleteBtn.visibility = View.VISIBLE
+            binding.contextEditText.visibility = View.VISIBLE
+            binding.btnPlus.visibility = View.INVISIBLE
+            binding.btnComplete.visibility = View.INVISIBLE
+            binding.btnUpdate.visibility = View.VISIBLE
+            binding.btnDelete.visibility = View.VISIBLE
             str = binding.contextEditText.text.toString()
             binding.diaryContent.text = str
             binding.diaryContent.visibility = View.VISIBLE
@@ -84,33 +97,38 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
             binding.contextEditText.visibility = View.INVISIBLE
             binding.diaryContent.visibility = View.VISIBLE
             binding.diaryContent.text = str
-            binding.saveBtn.visibility = View.INVISIBLE
-            binding.updateBtn.visibility = View.VISIBLE
-            binding.deleteBtn.visibility = View.VISIBLE
-            binding.updateBtn.setOnClickListener {
+            binding.btnPlus.visibility = View.INVISIBLE
+            binding.btnUpdate.visibility = View.VISIBLE
+            binding.btnDelete.visibility = View.VISIBLE
+            binding.btnComplete.visibility = View.INVISIBLE
+            binding.btnUpdate.setOnClickListener {
                 binding.contextEditText.visibility = View.VISIBLE
                 binding.diaryContent.visibility = View.INVISIBLE
                 binding.contextEditText.setText(str)
-                binding.saveBtn.visibility = View.VISIBLE
-                binding.updateBtn.visibility = View.INVISIBLE
-                binding.deleteBtn.visibility = View.INVISIBLE
+                //여기바꿈
+                binding.btnPlus.visibility = View.INVISIBLE
+                binding.btnComplete.visibility = View.VISIBLE
+                binding.btnUpdate.visibility = View.INVISIBLE
+                binding.btnDelete.visibility = View.INVISIBLE
                 binding.diaryContent.text = binding.contextEditText.text
             }
-            binding.deleteBtn.setOnClickListener {
+            binding.btnDelete.setOnClickListener {
                 binding.diaryContent.visibility = View.INVISIBLE
-                binding.updateBtn.visibility = View.INVISIBLE
-                binding.deleteBtn.visibility = View.INVISIBLE
+                binding.btnUpdate.visibility = View.INVISIBLE
+                binding.btnDelete.visibility = View.INVISIBLE
+                binding.btnComplete.visibility = View.INVISIBLE
                 binding.contextEditText.setText("")
                 binding.contextEditText.visibility = View.VISIBLE
-                binding.saveBtn.visibility = View.VISIBLE
+                binding.btnPlus.visibility = View.VISIBLE
                 removeDiary(fname)
             }
             if (binding.diaryContent.text == null) {
                 binding.diaryContent.visibility = View.INVISIBLE
-                binding.updateBtn.visibility = View.INVISIBLE
-                binding.deleteBtn.visibility = View.INVISIBLE
+                binding.btnUpdate.visibility = View.INVISIBLE
+                binding.btnDelete.visibility = View.INVISIBLE
+                binding.btnComplete.visibility = View.INVISIBLE
                 binding.diaryTextView.visibility = View.VISIBLE
-                binding.saveBtn.visibility = View.VISIBLE
+                binding.btnPlus.visibility = View.VISIBLE
                 binding. contextEditText.visibility = View.VISIBLE
             }
         } catch (e: Exception) {
@@ -148,17 +166,6 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
             e.printStackTrace()
         }
     }
-    //    @SuppressLint("WrongConstant")
-    //    fun saveEmptyDiary(readDay: String?) {
-    //        var fileOutputStream: FileOutputStream
-    //        try {
-    //            fileOutputStream = openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS)
-    //            fileOutputStream.write("")
-    //            fileOutputStream.close()
-    //        } catch (e: java.lang.Exception) {
-    //            e.printStackTrace()
-    //        }
-    //    }
 
 
 
