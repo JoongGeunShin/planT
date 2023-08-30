@@ -6,6 +6,7 @@ plugins {
 android {
     namespace 'com.example.plant'
     compileSdk 34
+    configurations { implementation.exclude group: 'org.jetbrains', module: 'annotations' }
 
     defaultConfig {
         applicationId "com.example.plant"
@@ -17,16 +18,16 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-//    buildFeatures {
-//        viewBinding = true
-//        dataBinding = true
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
+//    dataBinding{
+//        enabled = true
 //    }
-    dataBinding{
-        enabled = true
-    }
-    viewBinding{
-        enabled = true
-    }
+//    viewBinding{
+//        enabled = true
+//    }
 
     buildTypes {
         release {
@@ -50,7 +51,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-    implementation 'androidx.room:room-common:2.4.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -76,6 +76,14 @@ dependencies {
     // 캘린더
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
 
+    //view model
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore-preferences-core:1.0.0")
+
     // Naver Cloud platform API (Dynamic Map)
     implementation 'com.naver.maps:map-sdk:3.16.2'
     implementation("com.google.android.gms:play-services-location:16.0.0") // current location
@@ -85,6 +93,23 @@ dependencies {
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
     implementation 'io.github.ParkSangGwon:tedpermission-coroutine:3.3.0'
     implementation 'io.github.ParkSangGwon:tedpermission-rx2:3.3.0'
+
+    //datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-preferences-core:1.0.0"
+
+    //koin"
+    implementation("io.insert-koin:koin-core:3.1.2")
+    implementation("io.insert-koin:koin-android:3.1.2")
+    //room
+    implementation 'androidx.room:room-common:2.4.2'
+    implementation 'androidx.room:room-ktx:2.5.2'
+    implementation 'androidx.room:room-runtime:2.5.2'
+    implementation 'androidx.room:room-compiler:2.5.2'
+
+    //toast
+    implementation 'io.github.shashank02051997:FancyToast:2.0.1'
+    implementation 'io.github.muddz:styleabletoast:2.4.0'
 
     // alert dialogue
     def anko_version = "0.10.5"

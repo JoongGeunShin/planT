@@ -6,6 +6,11 @@
         android:icon="@drawable/ic_menu_home"
         android:title="@string/bottom_navi_home" />
     <item
+        android:id="@+id/menu_memo"
+        android:enabled="true"
+        android:icon="@drawable/ic_menu_home"
+        android:title="@string/bottom_navi_memo" />
+    <item
         android:id="@+id/menu_calendar"
         android:enabled="true"
         android:icon="@drawable/ic_menu_calendar"

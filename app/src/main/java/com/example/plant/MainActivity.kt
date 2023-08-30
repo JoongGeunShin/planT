@@ -20,10 +20,11 @@ import com.example.plant.NaverSearch.LocationDTO
 import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
-import com.example.plant.main_fragment.calendar.CalendarFragment
+import com.example.plant.main_fragment.calendar.ui.calendar.CalendarFragment
 import com.example.plant.main_fragment.HomeFragment
 import com.example.plant.main_fragment.SettingsFragment
 import com.example.plant.main_fragment.UserinfoFragment
+import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.naver.maps.geometry.Coord
 import com.naver.maps.map.overlay.Marker
@@ -85,6 +86,14 @@ open class MainActivity : AppCompatActivity() {
                             ContextCompat.getColorStateList(this, R.color.color_bnv)
                         HomeFragment()
                         // Respond to navigation item 1 click
+                    }
+                    R.id.menu_memo -> {
+                        bnv_main.itemIconTintList =
+                            ContextCompat.getColorStateList(this, R.color.color_bnv)
+                        bnv_main.itemTextColor =
+                            ContextCompat.getColorStateList(this, R.color.color_bnv)
+                        MemoFragment()
+                        // Respond to navigation item 2 click
                     }
 
                     R.id.menu_calendar -> {

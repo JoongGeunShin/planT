@@ -11,6 +11,38 @@
 
     <!--캘린더-->
     <!-- 달력에 사용하는 스타일 -->
+    <style name="CalendarWidgetWeek">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="CalendarWidgetDay">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="saveToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/classicBlue</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/classicBlue</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">center</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+    <style name="deleteToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/red</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">@color/red</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">center</item> top or center
+        <item name="stRadius">20dp</item>
+    </style>
+
     <style name="CustomTextAppearance" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/mcv_text_date_light</item>
