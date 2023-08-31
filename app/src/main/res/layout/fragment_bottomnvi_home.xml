@@ -70,7 +70,138 @@
                 app:layout_constraintEnd_toStartOf="@id/btn_findWay"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
+            <Switch
+                android:id="@+id/switch_foodType"
+                android:layout_margin="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="음식 종류 보이기"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
+            <LinearLayout
+                android:id="@+id/layout_foodType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switch_foodCategory">
+
+                <RadioGroup
+                    android:id="@+id/radioGrp_foodType"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radioBtn_chicken"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="치킨"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_pizza"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="피자"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_jokbal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="족발,보쌈"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_zzim"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="찜,탕"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_noodle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="면"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_bunsik"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="분식"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_typenun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="없음"
+                        android:textSize="12sp"/>
+                </RadioGroup>
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/switch_foodCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:text="가게 종류 보이기"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/switch_foodType"
+                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <LinearLayout
+                android:id="@+id/layout_foodCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_foodType">
+
+                <RadioGroup
+                    android:id="@+id/radioGrp_Category"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="invisible"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/radioBtn_food"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="음식점"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_cafe"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="카페"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_beverage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="술집"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_pub"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="펍"
+                        android:textSize="12sp"/>
+                    <RadioButton
+                        android:id="@+id/radioBtn_cateogorynun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="없음"
+                        android:textSize="12sp"/>
+                </RadioGroup>
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_items"
                 android:layout_width="match_parent"
@@ -128,8 +259,12 @@
                 android:id="@+id/frameLayoutMapFinder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF" />
+                android:background="#FFFFFF"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="2dp">
 
+
+            </FrameLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

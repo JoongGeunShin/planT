@@ -48,6 +48,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.log
 
 
 //, PermissionListener
@@ -95,9 +96,8 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     lateinit var rvItems: RecyclerView
 
     // 현재위치 기반 맛집찾기
-    var addressByReverseGeocode = ""
-    var HOTPLACEMarker = Marker()
-    var HOTPLACEList : MutableList<Array<String>> = mutableListOf()
+    private var foodCategoryString = ""
+    private var foodTypeString = ""
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -151,12 +151,10 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 }
             }
         })
-
-        //카메라 이동 버튼 setOnClickListener
+        // 카메라 이동 버튼 setOnClickListener
         binding.btnFirstCamera.setOnClickListener {
             firstCamera()
         }
-
         binding.btnNextCamera.setOnClickListener {
             stackOfCamera += 1
             if (path.coords.size < stackOfCamera * 60) {
@@ -174,7 +172,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
             prevCamera()
         }
-
         binding.btnFindWay.setOnClickListener {
             mFragmentListener = MapFinderFragment()
             hideMapFinder(false)
@@ -191,48 +188,85 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             circleOverlay.map = naverMap
 
             val latlng_string = "%.9f".format(naverMap.cameraPosition.target.longitude) + "," + "%.9f".format(naverMap.cameraPosition.target.latitude)
-            HOTPLACEList.clear()
-            ReverseGeocode(latlng_string)
-            findHOTPLACE(addressByReverseGeocode, "카페")
-            // 이름, 카테고리, 설명, 도로명주소, x, y
-//            if(!HOTPLACEList[0][4].isEmpty() && !HOTPLACEList[0][5].isEmpty()) {
-//                val tempLatLng =
-//                    LatLng(HOTPLACEList[0][4].toDouble(), HOTPLACEList[0][5].toDouble())
-//                HOTPLACEMarker.position = tempLatLng
-//                HOTPLACEMarker.map = naverMap
-//            }
-//            if(!HOTPLACEList[1][4].isEmpty() && !HOTPLACEList[1][5].isEmpty()) {
-//                val tempLatLng1 =
-//                    LatLng(HOTPLACEList[1][4].toDouble(), HOTPLACEList[1][5].toDouble())
-//                HOTPLACEMarker.position = tempLatLng1
-//                HOTPLACEMarker.map = naverMap
-//            }
-//            if(!HOTPLACEList[2][4].isEmpty() && !HOTPLACEList[2][5].isEmpty()) {
-//                val tempLatLng2 =
-//                    LatLng(HOTPLACEList[2][4].toDouble(), HOTPLACEList[2][5].toDouble())
-//                HOTPLACEMarker.position = tempLatLng2
-//                HOTPLACEMarker.map = naverMap
-//            }
-//            if(!HOTPLACEList[3][4].isEmpty() && !HOTPLACEList[3][5].isEmpty()) {
-//                val tempLatLng3 =
-//                    LatLng(HOTPLACEList[3][4].toDouble(), HOTPLACEList[3][5].toDouble())
-//                HOTPLACEMarker.position = tempLatLng3
-//                HOTPLACEMarker.map = naverMap
-//            }
-//            if(!HOTPLACEList[4][4].isEmpty() && !HOTPLACEList[4][5].isEmpty()) {
-//                val tempLatLng4 =
-//                    LatLng(HOTPLACEList[4][4].toDouble(), HOTPLACEList[4][5].toDouble())
-//                HOTPLACEMarker.position = tempLatLng4
-//                HOTPLACEMarker.map = naverMap
-//            }
-
-
-
+            Log.d(ContentValues.TAG,"1st... 위치에서 탐색하기 탭 클릭 $latlng_string}")
+            val foodString = foodCategoryString + foodTypeString
+            if(foodString.isEmpty()){
+                Toast.makeText(mainActivity,"상단의 음식 종류 혹은 가게 종류 중 최소 한가지를 선택해 주세요",Toast.LENGTH_SHORT).show()
+            }else{
+                ReverseGeocode(latlng_string)
+            }
+        }
+        binding.switchFoodType.setOnCheckedChangeListener{
+            p0, isChecked ->
+            if(isChecked) {
+                binding.radioGrpFoodType.visibility = View.VISIBLE
+            }else{
+                binding.radioGrpFoodType.visibility = View.INVISIBLE
+            }
+        }
+        binding.switchFoodCategory.setOnCheckedChangeListener{
+                p0, isChecked ->
+            if(isChecked) {
+                binding.radioGrpCategory.visibility = View.VISIBLE
+            }else{
+                binding.radioGrpCategory.visibility = View.INVISIBLE
+            }
+        }
+        binding.radioGrpFoodType.setOnCheckedChangeListener{
+            group, checkedId ->
+            when(checkedId){
+                R.id.radioBtn_pizza -> foodTypeString = "피자"
+                R.id.radioBtn_chicken -> foodTypeString = "치킨"
+                R.id.radioBtn_noodle -> foodTypeString = "면"
+                R.id.radioBtn_jokbal -> foodTypeString = "족발, 보쌈"
+                R.id.radioBtn_zzim -> foodTypeString = "찜, 탕"
+                R.id.radioBtn_bunsik -> foodTypeString = "분식"
+                R.id.radioBtn_typenun -> foodTypeString = ""
+            }
+            binding.radioGrpFoodType.visibility = View.INVISIBLE
+            binding.switchFoodType.isChecked = false
+            Toast.makeText(mainActivity,foodCategoryString + foodTypeString,Toast.LENGTH_SHORT).show()
+        }
+        binding.radioGrpCategory.setOnCheckedChangeListener{
+                group, checkedId ->
+            when(checkedId){
+                R.id.radioBtn_food -> foodCategoryString = "음식점"
+                R.id.radioBtn_cafe -> foodCategoryString = "카페"
+                R.id.radioBtn_pub -> foodCategoryString = "펍"
+                R.id.radioBtn_beverage -> foodCategoryString = "술"
+                R.id.radioBtn_cateogorynun -> foodCategoryString = ""
+            }
+            binding.radioGrpCategory.visibility = View.INVISIBLE
+            binding.switchFoodCategory.isChecked = false
         }
     }
+    fun ReverseGeocode(address_x_y : String) {
+        var regionString = ""
+        val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
 
-    var tempHOTPLACE_X = ""
-    var tempHOTPLACE_Y = ""
+        val ReverseGeocodeInterface = retrofit.create(ReverseGeocodeInterface::class.java)
+        val call =
+            ReverseGeocodeInterface.getLocationByReverseGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY,address_x_y)
+
+        call.enqueue(object : Callback<ReverseGeocodeDTO> {
+            override fun onResponse(
+                call: Call<ReverseGeocodeDTO>, response: Response<ReverseGeocodeDTO>
+            ) {
+                response.body()?.results?.forEach {
+                    if(it.region.area1.name.isNotEmpty())
+                        regionString =  it.region.area1.name + " " + it.region.area2.name + " " + it.region.area3.name +
+                                " "  + it.region.area4.name
+                    Log.d(ContentValues.TAG,"reverse geocode를 통해 얻은 도로명 주소 = $regionString")
+                    findHOTPLACE(regionString, foodCategoryString + foodTypeString) // 술집으로 테스트
+                }
+            }
+
+            override fun onFailure(call: Call<ReverseGeocodeDTO>, t: Throwable) {
+                Log.d(ContentValues.TAG, t.toString())
+            }
+        })
+    }
     fun findHOTPLACE(placeAddress: String, placetype:String){
         val retrofit = Retrofit.Builder()
             .baseUrl("https://openapi.naver.com")
@@ -247,12 +281,18 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                     response: Response<HOTPLACEDTO>
                 ) {
                     response.body()?.HOTPLACES?.forEach {
-                        if(!it.roadAddress.isNullOrEmpty()){
-                            HOTPLACEGeocoder(it.roadAddress)
-                            HOTPLACEList.add(arrayOf(it.title,it.category,it.description,it.roadAddress,tempHOTPLACE_X,tempHOTPLACE_Y))
-                        }
+                        Log.d(ContentValues.TAG,"3rd... Hotplace Finder 호출")
+                        HOTPLACEGeocoder(it.title,it.category,it.description,it.roadAddress)
+    //                            val HOTPLACEMarker = Marker()
+    //                            HOTPLACEMarker.position
+    //                            Log.d(ContentValues.TAG,HOTPLACEMarker.position.toString())
+    //                            HOTPLACEMarker.map = naverMap
+    //                            HOTPLACEMarker.icon = MarkerIcons.BLACK
+    //                            HOTPLACEMarker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
+    //                            HOTPLACEMarker.captionText = "여기"
                     }
-//                    Log.d(ContentValues.TAG,HOTPLACEList[0][0])
+
+
 
                 }
                 override fun onFailure(call: Call<HOTPLACEDTO>, t: Throwable) {
@@ -260,61 +300,44 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 }
             })
     }
-    fun HOTPLACEGeocoder(HOTPLACE_RoadAddress: String) {
+    fun HOTPLACEGeocoder(HOTPLACE_Title: String,HOTPLACE_Category: String,HOTPLACE_Description: String, HOTPLACE_RoadAddress:String){
+        var HOTPLACELatLng : LatLng
+        val HOTPLACE_Title = HOTPLACE_Title
+        val HOTPLACE_Category = HOTPLACE_Category
+        val HOTPLACE_Description = HOTPLACE_Description
+        val HOTPLACE_RoadAddress = HOTPLACE_RoadAddress
         val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
 
         val GeocodeInterface = retrofit.create(GeocodeInterface::class.java)
         val call =
             GeocodeInterface.getLocationByGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY, HOTPLACE_RoadAddress)
-
+        val HOTPLACEMarker = Marker()
         call.enqueue(object : Callback<GeocodeDTO> {
             override fun onResponse(
                 call: Call<GeocodeDTO>, response: Response<GeocodeDTO>
             ) {
                 response.body()?.addresses?.forEach {
-                    tempHOTPLACE_X = it.x
-                    tempHOTPLACE_Y = it.y
+                    Log.d(ContentValues.TAG,"4th.. HOTPLACEGeocoder 호출")
+
+                    HOTPLACELatLng = LatLng(it.y.toDouble(),it.x.toDouble())
+                    HOTPLACEMarker.position = HOTPLACELatLng
+                    HOTPLACEMarker.map = naverMap
+                    HOTPLACEMarker.icon = MarkerIcons.BLACK
+                    HOTPLACEMarker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
+                    HOTPLACEMarker.captionText = HOTPLACE_Title
+//                    HOTPLACEList.add(arrayOf(HOTPLACE_Title, HOTPLACE_Category, HOTPLACE_Description, it.x, it.y))
+                    Log.d(ContentValues.TAG, "제목 : $HOTPLACE_Title 설명 : $HOTPLACE_Description 카테고리 : $HOTPLACE_Category " +
+                            "도로명주소 : $HOTPLACE_RoadAddress 좌표 : $HOTPLACELatLng")
                 }
+
             }
             override fun onFailure(call: Call<GeocodeDTO>, t: Throwable) {
                 Log.d(ContentValues.TAG, "Connection ERROR")
             }
         })
+
     }
-    fun ReverseGeocode(address_x_y : String) {
-        val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
-            .addConverterFactory(GsonConverterFactory.create()).build()
-
-
-        val ReverseGeocodeInterface = retrofit.create(ReverseGeocodeInterface::class.java)
-        val call =
-            ReverseGeocodeInterface.getLocationByReverseGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY,address_x_y)
-
-        call.enqueue(object : Callback<ReverseGeocodeDTO> {
-            override fun onResponse(
-                call: Call<ReverseGeocodeDTO>, response: Response<ReverseGeocodeDTO>
-            ) {
-//                Log.d("Test", "Raw: ${response.raw()}")
-//                Log.d("Test", "Body: ${response.body()}")
-                response.body()?.results?.forEach {
-                    if(it.region.area1.name.isNotEmpty()) addressByReverseGeocode = ""
-                    addressByReverseGeocode =
-                        it.region.area1.name + " " + it.region.area2.name + " " + it.region.area3.name +
-                                " "  + it.region.area4.name
-                }
-                Log.d("Test",addressByReverseGeocode)
-
-            }
-
-            override fun onFailure(call: Call<ReverseGeocodeDTO>, t: Throwable) {
-                Log.d(ContentValues.TAG, t.toString())
-
-            }
-        })
-    }
-
-
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
 
@@ -347,6 +370,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         }
 
+
     }
 
     lateinit var text: String
@@ -355,14 +379,11 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     override fun onReceivedData(data: String) {
 //tvParent.text = data
     }
-
-
     // visible 설정
     fun hideMapFinder(state: Boolean) {
         if (state) binding.frameLayoutMapFinder.visibility =
             View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
     }
-
     lateinit var coord: Coord
     fun moveToSearchedLocation(x: Double, y: Double, type: String, boolean: Boolean) {
         coord = LatLng(y, x)
@@ -389,7 +410,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
         marker.captionText = "여기"
     }
-
     fun Geocode(address: String, type: String, boolean: Boolean) {
         val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
@@ -420,7 +440,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
     }
-
     val path = PathOverlay()
     fun pathFinder(startCoord: Coord, goalCoord: Coord) {
         val retrofit =
@@ -492,7 +511,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
 
     }
-
     //카메라 이동 (이전, 처음, 다음)
     fun firstCamera() {
         //여기 바꿔야함
@@ -502,21 +520,17 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
         Log.d(ContentValues.TAG, "path size is ${path_size}")
     }
-
     var stackOfCamera = 0
     fun nextCamera() {
         var nextStep = path.coords[stackOfCamera * 60]
         val cameraUpdate = CameraUpdate.scrollTo(nextStep as LatLng)
         naverMap.moveCamera(cameraUpdate)
     }
-
     fun prevCamera() {
         var prevStep = path.coords[stackOfCamera * 60]
         val cameraUpdate = CameraUpdate.scrollTo(prevStep as LatLng)
         naverMap.moveCamera(cameraUpdate)
     }
-
-
 }
 
 
