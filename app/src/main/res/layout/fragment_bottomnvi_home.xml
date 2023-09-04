@@ -232,6 +232,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
+                android:visibility="invisible"
                 android:text="처음"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
                 app:layout_constraintStart_toEndOf="@id/btn_prevCamera" />
@@ -241,6 +242,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
+                android:visibility="invisible"
                 android:text="다음"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
                 app:layout_constraintStart_toEndOf="@id/btn_firstCamera" />
@@ -250,6 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
+                android:visibility="invisible"
                 android:text="이전"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -265,6 +268,15 @@
 
 
             </FrameLayout>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blank"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_home_jangbaguni"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

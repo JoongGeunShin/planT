@@ -12,7 +12,7 @@ interface HOTPLACESearchInterface {
         @Header("X-Naver-Client-Secret") secretKey: String,
         @Query("query") keyword: String,
         @Query("display") display: Int = 10,
-        @Query("sort") sort: String = "comment"
+        @Query("sort") sort: String = "random"
     ): Call<HOTPLACEDTO>
 
 }

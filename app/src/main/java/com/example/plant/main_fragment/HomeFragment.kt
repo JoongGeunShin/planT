@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +39,9 @@ import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
@@ -282,14 +285,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 ) {
                     response.body()?.HOTPLACES?.forEach {
                         Log.d(ContentValues.TAG,"3rd... Hotplace Finder 호출")
-                        HOTPLACEGeocoder(it.title,it.category,it.description,it.roadAddress)
-    //                            val HOTPLACEMarker = Marker()
-    //                            HOTPLACEMarker.position
-    //                            Log.d(ContentValues.TAG,HOTPLACEMarker.position.toString())
-    //                            HOTPLACEMarker.map = naverMap
-    //                            HOTPLACEMarker.icon = MarkerIcons.BLACK
-    //                            HOTPLACEMarker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
-    //                            HOTPLACEMarker.captionText = "여기"
+                        HOTPLACEGeocoder(Html.fromHtml(it.title).toString(),it.category,it.description,it.roadAddress)
                     }
 
 
@@ -313,6 +309,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         val call =
             GeocodeInterface.getLocationByGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY, HOTPLACE_RoadAddress)
         val HOTPLACEMarker = Marker()
+        val infoWindow = InfoWindow()
         call.enqueue(object : Callback<GeocodeDTO> {
             override fun onResponse(
                 call: Call<GeocodeDTO>, response: Response<GeocodeDTO>
@@ -329,6 +326,40 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 //                    HOTPLACEList.add(arrayOf(HOTPLACE_Title, HOTPLACE_Category, HOTPLACE_Description, it.x, it.y))
                     Log.d(ContentValues.TAG, "제목 : $HOTPLACE_Title 설명 : $HOTPLACE_Description 카테고리 : $HOTPLACE_Category " +
                             "도로명주소 : $HOTPLACE_RoadAddress 좌표 : $HOTPLACELatLng")
+
+                    infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mainActivity) {
+                        override fun getText(infoWindow: InfoWindow): CharSequence {
+                            return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
+                                    "도로명주소: $HOTPLACE_RoadAddress"
+                        }
+                    }
+
+                    val listener = Overlay.OnClickListener { overlay ->
+                        val marker = overlay as Marker
+                        if (marker.infoWindow == null) {
+                            // 현재 마커에 정보 창이 열려있지 않을 경우 엶
+                            infoWindow.open(marker)
+
+                        } else {
+                            // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
+                            infoWindow.close()
+                        }
+
+
+                        true
+                    }
+                    HOTPLACEMarker.onClickListener = listener
+
+//                    naverMap.setOnMapLongClickListener { pointF, latLng ->
+//                        if(HOTPLACEMarker.position == latLng){
+//                            Log.d(ContentValues.TAG,"마커 길게 눌러짐")
+//                        }else{
+//                            Log.d(ContentValues.TAG,"마커 아님")
+//                        }
+//                    }
+//                    naverMap.setOnMapClickListener { pointF, latLng ->
+//                        infoWindow.close()
+//                    }
                 }
 
             }
@@ -338,6 +369,8 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
 
     }
+
+
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
 
@@ -369,6 +402,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 false
             }
         }
+
 
 
     }
