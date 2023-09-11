@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
 import com.example.plant.databinding.MenuDialogBinding
 import com.example.plant.databinding.ModifyMemoDialogBinding
@@ -18,8 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MemoModifyFragment() : DialogFragment() {
 
-    private lateinit var binding: ModifyMemoDialogBinding
-//    private val binding by viewBinding(ModifyMemoDialogBinding::bind)
+    private val binding by viewBinding(ModifyMemoDialogBinding::bind)
     private val memoViewModel : MemoViewModel by viewModel()
     var content: String = "" // 메모 내용
     var serialNum : Int = 0 // 메모 일련번호

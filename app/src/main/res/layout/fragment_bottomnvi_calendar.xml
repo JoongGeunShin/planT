@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <data>
 
@@ -18,14 +19,15 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".views.location_enroll.LocationEnrollFragment">
+            tools:context=".views.location_enroll.LocationEnrollFragment"
+            android:background="@color/classicBlue">
 
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@color/blank"
+                android:background="@color/classicBlue"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingConstraints">
 
@@ -53,12 +55,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:mcv_arrowColor="@color/black"
                 app:mcv_dateTextAppearance="@style/CalendarWidgetDay"
                 app:mcv_headerTextAppearance="@style/CalendarWidgetHeader"
                 app:mcv_selectionColor="#5a7fbf"
                 app:mcv_weekDayTextAppearance="@style/CalendarWidgetWeek"
                 tools:ignore="MissingConstraints" />
-            <!--            app:mcv_arrowColor="@color/white"-->
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/schedule_Listview"

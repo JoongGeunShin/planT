@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
 import com.example.plant.databinding.MenuDialogBinding
 import com.example.plant.databinding.ModifyScheduleDialogBinding
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
 import com.example.plant.main_fragment.calendar.viewModel.ScheduleViewModel
+import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,9 +26,7 @@ class MenuDialogFragment()  : DialogFragment(), View.OnClickListener{
     var selectedDate: String = "" // 선택된 날짜
     var size: Int = 0 // 리스트 사이즈
 
-    //내가 추가한 binding
-    private lateinit var binding: MenuDialogBinding
-//    private val binding by viewBinding(MenuDialogBinding::bind)
+    private val binding by viewBinding(MenuDialogBinding::bind)
     private val scheduleViewModel : ScheduleViewModel by viewModel()
     private val eventViewModel : EventViewModel by viewModel()
 
@@ -57,7 +57,7 @@ class MenuDialogFragment()  : DialogFragment(), View.OnClickListener{
                 }
             }
 //            alarmFunctions.cancelAlarm(alarmCode) // 알람 취소
-//            StyleableToast.makeText(requireContext(), "삭제", R.style.deleteToast).show()
+            StyleableToast.makeText(requireContext(), "삭제", R.style.deleteToast).show()
             this.dismiss()
         }
         if (id == R.id.modifyBtn){ // 일정 변경 다이얼로그 호출

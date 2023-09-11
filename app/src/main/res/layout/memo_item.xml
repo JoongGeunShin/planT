@@ -33,10 +33,11 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:text="@{memo.content}"
                 android:textSize="15sp"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="@{memo.content}"/>
+
 
             <CheckBox
                 android:id="@+id/completionBox"

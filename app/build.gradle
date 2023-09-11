@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -18,16 +19,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        viewBinding = true
-        dataBinding = true
-    }
-//    dataBinding{
-//        enabled = true
-//    }
-//    viewBinding{
-//        enabled = true
-//    }
+
 
     buildTypes {
         release {
@@ -36,11 +28,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    dataBinding{
+        enabled = true
+    }
+    viewBinding{
+        enabled = true
     }
 }
 
@@ -63,7 +61,6 @@ dependencies {
 
     // 카카오 관련
     implementation "com.kakao.sdk:v2-user:2.10.0"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
 
     // navigation implementations(https://developer.android.com/guide/navigation/get-started) <jetpack>
     def nav_version = "2.6.0"
@@ -73,12 +70,20 @@ dependencies {
     // 원형 이미지
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    // 캘린더
-    implementation 'com.github.prolificinteractive:material-calendarview:2.0.1'
+    //viewBindingPropertyDelegate
+    implementation 'com.github.kirich1409:viewbindingpropertydelegate-noreflection:1.5.6'
 
-    //view model
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
+    // 캘린더
+    implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
+
+
+    //view model, lifecycle
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-common:2.5.1"
+
+    implementation "com.github.kirich1409:viewbindingpropertydelegate:1.5.6"
 
     //datastore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
@@ -99,13 +104,15 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences-core:1.0.0"
 
     //koin"
-    implementation("io.insert-koin:koin-core:3.1.2")
-    implementation("io.insert-koin:koin-android:3.1.2")
+    implementation "io.insert-koin:koin-core:3.1.2"
+    implementation "io.insert-koin:koin-android:3.1.2"
+    implementation "io.insert-koin:koin-android-compat:3.1.2"
+
     //room
-    implementation 'androidx.room:room-common:2.4.2'
-    implementation 'androidx.room:room-ktx:2.5.2'
-    implementation 'androidx.room:room-runtime:2.5.2'
-    implementation 'androidx.room:room-compiler:2.5.2'
+    implementation 'androidx.room:room-common:2.4.3'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    implementation 'androidx.room:room-runtime:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
 
     //toast
     implementation 'io.github.shashank02051997:FancyToast:2.0.1'

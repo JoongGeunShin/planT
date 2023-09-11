@@ -3,7 +3,9 @@ package com.example.plant.main_fragment.calendar.ui.calendar
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.MODE_NO_LOCALIZED_COLLATORS
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
 import com.example.plant.MainActivity
 import com.example.plant.R
@@ -29,11 +32,17 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Collections
 
-class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
-    // binding
-    private var _binding: FragmentBottomnviCalendarBinding? = null
+//class CalendarFragment() : Fragment(R.layout.fragment_bottomnvi_calendar) {
 
-    private val binding get() = _binding!!
+class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener{
+// binding
+//    private var _binding: FragmentBottomnviCalendarBinding? = null
+
+    private val binding by viewBinding(FragmentBottomnviCalendarBinding::bind,
+        onViewDestroyed = { binding ->
+            binding.scheduleListview.adapter = null // free view binding
+        })
+//    private val binding get() = _binding!!
     lateinit var mainActivity: MainActivity
 
     //캘린더 변수
@@ -53,29 +62,31 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
         mainActivity = context as MainActivity
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentBottomnviCalendarBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
-    }
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        _binding = FragmentBottomnviCalendarBinding.inflate(inflater, container, false)
+//        val view = binding.root
+//        return view
+//    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         //addSEchedule버튼으로 adddialog프래그먼트로 이동 코드 수정필요할지도
-        binding.btnAddschedule.setOnClickListener{
-            val dialog = AddDialogFragment()
-            dialog.show(parentFragmentManager, "AddScheduleDialog")
-        }
+//        binding.btnAddschedule.setOnClickListener {
+//            val dialog = AddDialogFragment()
+//            dialog.show(parentFragmentManager, "AddScheduleDialog")
+//        }
+
+        binding.btnAddschedule.setOnClickListener(this)
 
 
         binding.calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 출력
-//        binding.calendarView.addDecorators(SaturdayDecorator(), SundayDecorator()) // 주말 강조
+        binding.calendarView.addDecorators(SaturdayDecorator(), SundayDecorator()) // 주말 강조
 
         var year = binding.calendarView.selectedDate!!.year
         var month = binding.calendarView.selectedDate!!.month + 1
@@ -109,6 +120,7 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
                     binding.calendarView
                         .addDecorator(
                             EventDecorator(
+                                Color.parseColor("#0E406B"),
                                 Collections.singleton(
                                     CalendarDay.from(
                                         year,
@@ -138,7 +150,6 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
     }
 
 
-
     private fun callList() {
         scheduleViewModel.getAllSchedule(selectedDate)
             .observe(viewLifecycleOwner, androidx.lifecycle.Observer { list ->
@@ -155,8 +166,31 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
                 }
             })
     }
-}
 
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.btn_addschedule -> { // open AddDialog
+                val dialog = AddDialogFragment()
+                dialog.show(parentFragmentManager, "AddScheduleDialog")
+            }
+        }
+    }
+    override fun onStart() {
+        super.onStart()
+        binding.calendarView.selectedDate = CalendarDay.today()
+        Log.e(TAG, "onStart()")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.calendarView.selectedDate = CalendarDay.today()
+        Log.e(TAG, "onResume()")
+    }
+
+    companion object{
+        const val TAG = "CalendarFragment"
+    }
+}
 
 
 //        binding.calendarView.setOnDateChangedListener { widget:MaterialCalendarView, date: CalendarDay, selected: Boolean  ->
@@ -193,11 +227,6 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar) {
 //            binding.diaryContent.text = str
 //            binding.diaryContent.visibility = View.VISIBLE
 //        }
-
-
-
-
-
 
 
 //    fun checkDay(cYear: Int, cMonth: Int, cDay: Int, userID: String) {

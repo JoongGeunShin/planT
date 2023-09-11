@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
 import com.example.plant.databinding.ModifyScheduleDialogBinding
 import com.example.plant.main_fragment.calendar.model.Schedule
@@ -22,8 +23,8 @@ class ScheduleModifyFragment(
 ) : DialogFragment() {
 
     //내가추가한것 binding
-    private lateinit var binding: ModifyScheduleDialogBinding
-//    private val binding by viewBinding(ModifyScheduleDialogBinding::bind)
+//    private lateinit var binding: ModifyScheduleDialogBinding
+    private val binding by viewBinding(ModifyScheduleDialogBinding::bind)
     private val scheduleViewModel : ScheduleViewModel by viewModel()
     private val eventViewModel : EventViewModel by viewModel()
     private lateinit var schedule : Schedule

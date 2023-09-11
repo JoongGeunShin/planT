@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
 import com.example.plant.Importance
 import com.example.plant.R
@@ -27,7 +28,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다이얼로그
 
-    private lateinit var binding: AddScheduleDialogBinding
+//    private lateinit var binding: AddScheduleDialogBinding
+    private val binding by viewBinding(AddScheduleDialogBinding::bind)
     private val dateSaveModule : DateSaveModule by inject()
     private val scheduleViewModel : ScheduleViewModel by viewModel()
     private val eventViewModel : EventViewModel by viewModel()

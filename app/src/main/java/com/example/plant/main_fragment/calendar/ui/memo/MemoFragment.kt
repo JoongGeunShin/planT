@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
 import com.example.plant.databinding.FragmentBottomnviCalendarBinding
 import com.example.plant.databinding.FragmentBottomnviMemoBinding
@@ -24,20 +25,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MemoFragment : Fragment(R.layout.fragment_bottomnvi_memo) {
 
-    private var _binding: FragmentBottomnviMemoBinding? = null
-    private val binding get() = _binding!!
-
+    private val binding by viewBinding(FragmentBottomnviMemoBinding::bind,
+        onViewDestroyed = { binding ->
+            binding.todoListView.adapter = null
+        })
 
     private val memoViewModel : MemoViewModel by viewModel()
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentBottomnviMemoBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return  view
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
