@@ -1,5 +1,6 @@
 package com.example.plant.main_fragment
 
+import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.HOTPLACE.HOTPLACEDTO
 import com.example.plant.HOTPLACE.HOTPLACESearchInterface
-
 import com.example.plant.MainActivity
 import com.example.plant.NaverGeocode.GeocodeDTO
 import com.example.plant.NaverGeocode.GeocodeInterface
@@ -27,14 +27,13 @@ import com.example.plant.R
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
 import com.example.plant.pathfinder.NaverAPI
 import com.example.plant.pathfinder.ResultPath
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.overlay.CircleOverlay
-
 import com.naver.maps.geometry.LatLngBounds
-
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
@@ -45,13 +44,11 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.math.log
 
 
 //, PermissionListener
@@ -101,6 +98,11 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     // 현재위치 기반 맛집찾기
     private var foodCategoryString = ""
     private var foodTypeString = ""
+
+    // 장바구니
+    private var isFabOpen = false
+    private var jangBaguniItemCount = 0
+    private val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -184,11 +186,11 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         binding.btnFindMapItems.setOnClickListener {
             Toast.makeText(mainActivity,"위치에서 탐색하기 버튼 click",Toast.LENGTH_SHORT).show()
             // 현재 위치 중심을 토대로 원 생성
-            circleOverlay.center = naverMap.cameraPosition.target
-            circleOverlay.outlineWidth = 12
-            circleOverlay.radius = 1000.0
-            circleOverlay.color = 0
-            circleOverlay.map = naverMap
+//            circleOverlay.center = naverMap.cameraPosition.target
+//            circleOverlay.outlineWidth = 12
+//            circleOverlay.radius = 1000.0
+//            circleOverlay.color = 0
+//            circleOverlay.map = naverMap
 
             val latlng_string = "%.9f".format(naverMap.cameraPosition.target.longitude) + "," + "%.9f".format(naverMap.cameraPosition.target.latitude)
             Log.d(ContentValues.TAG,"1st... 위치에서 탐색하기 탭 클릭 $latlng_string}")
@@ -242,7 +244,124 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             binding.radioGrpCategory.visibility = View.INVISIBLE
             binding.switchFoodCategory.isChecked = false
         }
+        binding.fabJangbaguni.setOnClickListener {
+            toggleFab()
+        }
+        binding.fabJangbaguniItem1.setOnClickListener {
+            if(1 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[0].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[0]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.fabJangbaguniItem2.setOnClickListener {
+            if(2 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[1].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[1]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.fabJangbaguniItem3.setOnClickListener {
+            if(3 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[2].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[2]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.fabJangbaguniItem4.setOnClickListener {
+            if(4 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[3].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[3]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.fabJangbaguniItem5.setOnClickListener {
+            if(5 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[4].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[4]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.fabJangbaguniItem6.setOnClickListener {
+            if(6 <= jangBaguniItemCount){
+                val cameraUpdate =
+                    CameraUpdate.scrollTo(jangBaguniItem[5].get("location") as LatLng)
+                        .animate(CameraAnimation.Easing, 2000)
+                naverMap.moveCamera(cameraUpdate)
+                Toast.makeText(mainActivity, jangBaguniItem[5]["info"].toString(), Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
+//    private var jangBaguniItemCount = 0
+//    private lateinit var jangBaguniItem : MutableList<HashMap<String,Any>>
+    fun toggleFab() {
+        Toast.makeText(mainActivity, "메인 플로팅 버튼 클릭 : $isFabOpen", Toast.LENGTH_SHORT).show()
+        // 플로팅 액션 버튼 닫기 - 열려있는 플로팅 버튼 집어넣는 애니메이션 세팅
+        if (isFabOpen) {
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem1, "translationY", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem2, "translationY", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem3, "translationY", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem4, "translationX", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem5, "translationX", 0f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem6, "translationX", 0f).apply { start() }
+            binding.fabJangbaguniItem1.visibility = View.INVISIBLE
+            binding.fabJangbaguniItem2.visibility = View.INVISIBLE
+            binding.fabJangbaguniItem3.visibility = View.INVISIBLE
+            binding.fabJangbaguniItem4.visibility = View.INVISIBLE
+            binding.fabJangbaguniItem5.visibility = View.INVISIBLE
+            binding.fabJangbaguniItem6.visibility = View.INVISIBLE
+
+            ObjectAnimator.ofFloat(binding.fabJangbaguni, View.ROTATION, 45f, 0f).apply { start() }
+            // 플로팅 액션 버튼 열기 - 닫혀있는 플로팅 버튼 꺼내는 애니메이션 세팅
+        } else {
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem1, "translationY", -180f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem2, "translationY", -360f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem3, "translationY", -540f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem4, "translationX", -180f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem5, "translationX", -360f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem6, "translationX", -540f).apply { start() }
+            binding.fabJangbaguniItem1.visibility = View.VISIBLE
+            binding.fabJangbaguniItem2.visibility = View.VISIBLE
+            binding.fabJangbaguniItem3.visibility = View.VISIBLE
+            binding.fabJangbaguniItem4.visibility = View.VISIBLE
+            binding.fabJangbaguniItem5.visibility = View.VISIBLE
+            binding.fabJangbaguniItem6.visibility = View.VISIBLE
+            ObjectAnimator.ofFloat(binding.fabJangbaguni, View.ROTATION, 45f, 0f).apply { start() }
+        }
+
+        isFabOpen = !isFabOpen
+
+    }
+
     fun ReverseGeocode(address_x_y : String) {
         var regionString = ""
         val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
@@ -336,30 +455,38 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
                     val listener = Overlay.OnClickListener { overlay ->
                         val marker = overlay as Marker
+
                         if (marker.infoWindow == null) {
                             // 현재 마커에 정보 창이 열려있지 않을 경우 엶
                             infoWindow.open(marker)
-
                         } else {
                             // 이미 현재 마커에 정보 창이 열려있을 경우 닫음
                             infoWindow.close()
                         }
+//                        naverMap.OnMapLongClickListener { pointF, latLng ->
+//                            Log.d(ContentValues.TAG,latLng.toString())
+//                        }
+                        // 꾹 누르면 장바구니에 넣을 수 있게
+//    private var jangBaguniItemCount = 0
+//    private lateinit var jangBaguniItem : MutableList<HashMap<String,Any>>
 
-
+                        naverMap.setOnMapLongClickListener { pointF, latLng ->
+                            Log.d(ContentValues.TAG,latLng.toString())
+                            Log.d(ContentValues.TAG,"위치 : ${marker.position}")
+//                            Log.d(ContentValues.TAG,infoWindow.toString())
+                            jangBaguniItem.add(HashMap())
+                            jangBaguniItem[jangBaguniItemCount].put("location", marker.position)
+                            jangBaguniItem[jangBaguniItemCount].put("info",infoWindow.open(marker).toString())
+                            jangBaguniItemCount++
+                            Toast.makeText(mainActivity,"$jangBaguniItemCount 번째 장바구니에 담겼습니다!",Toast.LENGTH_SHORT).show()
+                        }
                         true
                     }
+
+
                     HOTPLACEMarker.onClickListener = listener
 
-//                    naverMap.setOnMapLongClickListener { pointF, latLng ->
-//                        if(HOTPLACEMarker.position == latLng){
-//                            Log.d(ContentValues.TAG,"마커 길게 눌러짐")
-//                        }else{
-//                            Log.d(ContentValues.TAG,"마커 아님")
-//                        }
-//                    }
-//                    naverMap.setOnMapClickListener { pointF, latLng ->
-//                        infoWindow.close()
-//                    }
+
                 }
 
             }
@@ -369,6 +496,16 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
 
     }
+
+//    fun addToJangbaguni(overlay: Overlay){
+//        val marker = overlay as Marker
+//        var infos = ""
+//        marker.setOnClickListener {
+//            naverMap.setOnMapLongClickListener { pointF, latLng ->
+//                infos = marker.infoWindow
+//            }
+//        }
+//    }
 
 
     override fun onMapReady(naverMap: NaverMap) {
@@ -390,6 +527,10 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             Toast.makeText(
                 mainActivity, "${coord.latitude}, ${coord.longitude}", Toast.LENGTH_SHORT
             ).show()
+            // 여기서 장바구니 테스트
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
         }
 
         naverMap.setOnSymbolClickListener { symbol ->
@@ -403,15 +544,13 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         }
 
-
-
     }
 
     lateinit var text: String
 
     //tvParent.text = data -> 바꿔야함
     override fun onReceivedData(data: String) {
-//tvParent.text = data
+    // tvParent.text = data
     }
     // visible 설정
     fun hideMapFinder(state: Boolean) {
@@ -566,7 +705,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
     }
 }
-
 
 
 
