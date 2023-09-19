@@ -43,12 +43,12 @@ class MemoFragment : Fragment(R.layout.fragment_bottomnvi_memo) {
         itemTouchHelper.attachToRecyclerView(binding.todoListView)
 
         // 상단에 날짜 표시
-        val date = run {
-            val month =  (CalendarDay.today().month + 1).toString()
-            val day = CalendarDay.today().day.toString()
-            "${month}월 ${day}일"
-        }
-        binding.todayDate.text = date
+//        val date = run {
+//            val month =  (CalendarDay.today().month + 1).toString()
+//            val day = CalendarDay.today().day.toString()
+//            "${month}월 ${day}일"
+//        }
+        binding.todayDate.text = "새로 추가할 일정"
         binding.todayDate.text
 
         // 메모 저장

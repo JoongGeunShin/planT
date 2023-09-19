@@ -51,21 +51,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:layout_constraintTop_toTopOf="@id/alarmOnOffBtn"
+            app:layout_constraintTop_toTopOf="@id/btn_start_time"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/alarmOnOffBtn"
+            app:layout_constraintBottom_toBottomOf="@id/btn_start_time"
             android:text="알람"
             android:textSize="12sp"
             android:textColor="@color/classicBlue"
             tools:ignore="MissingConstraints" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/alarmOnOffBtn"
+            android:id="@+id/btn_start_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/timePicker"
+            tools:ignore="MissingConstraints" />
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/btn_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_start_time"
             tools:ignore="MissingConstraints" />
 <!--            android:thumb="@drawable/switch_thumb"-->
 <!--            app:track="@drawable/selector_switch"-->
@@ -76,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/alarmOnOffBtn"
+            app:layout_constraintTop_toBottomOf="@id/btn_end_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="12sp"

@@ -32,23 +32,14 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Collections
 
-//class CalendarFragment() : Fragment(R.layout.fragment_bottomnvi_calendar) {
-
 class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener{
-// binding
-//    private var _binding: FragmentBottomnviCalendarBinding? = null
 
     private val binding by viewBinding(FragmentBottomnviCalendarBinding::bind,
         onViewDestroyed = { binding ->
             binding.scheduleListview.adapter = null // free view binding
         })
-//    private val binding get() = _binding!!
-    lateinit var mainActivity: MainActivity
 
-    //캘린더 변수
-    var userID: String = "userID"
-    lateinit var fname: String
-    lateinit var str: String
+    lateinit var mainActivity: MainActivity
 
     //
     private lateinit var selectedDate: String // 달력에서 선택한 날짜
@@ -62,25 +53,8 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
         mainActivity = context as MainActivity
     }
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        _binding = FragmentBottomnviCalendarBinding.inflate(inflater, container, false)
-//        val view = binding.root
-//        return view
-//    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //addSEchedule버튼으로 adddialog프래그먼트로 이동 코드 수정필요할지도
-//        binding.btnAddschedule.setOnClickListener {
-//            val dialog = AddDialogFragment()
-//            dialog.show(parentFragmentManager, "AddScheduleDialog")
-//        }
 
         binding.btnAddschedule.setOnClickListener(this)
 
