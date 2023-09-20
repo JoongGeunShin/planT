@@ -103,7 +103,7 @@
 
 
         <EditText
-            android:id="@+id/content"
+            android:id="@+id/tv_item_title"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
@@ -126,7 +126,7 @@
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/dateText"
             app:layout_constraintStart_toStartOf="@id/dateText"
-            app:layout_constraintTop_toBottomOf="@id/content"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_title"
             tools:ignore="MissingConstraints" />
 
         <RadioGroup

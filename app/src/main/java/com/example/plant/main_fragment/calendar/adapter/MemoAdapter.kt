@@ -3,16 +3,11 @@ package com.example.plant.main_fragment.calendar.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 //import androidx.room.processor.Context
-import com.example.plant.R
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.model.Memo
-import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.ui.memo.ItemTouchHelperListener
 import com.example.plant.main_fragment.calendar.ui.memo.MemoModifyFragment
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
@@ -75,7 +70,7 @@ class MemoAdapter (
 
     override fun onLeftClick(position: Int, viewHolder: RecyclerView.ViewHolder?) { // 메모 변경
         val dialog = MemoModifyFragment().apply {
-            content = list[position].content
+            content = list[position].title
             serialNum = list[position].serialNum
         }
         dialog.show((context as FragmentActivity).supportFragmentManager, "MemoModifyFragment")

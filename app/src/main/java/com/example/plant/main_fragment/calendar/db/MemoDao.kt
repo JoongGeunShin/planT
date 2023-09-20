@@ -21,6 +21,6 @@ interface MemoDao { // 메모 테이블 관련
     @Query("UPDATE memo SET completion = :completion where serialNum = :serialNum")
     fun changeCompletion(completion: Boolean, serialNum: Int)
 
-    @Query("UPDATE memo SET content = :content where serialNum = :serialNum")
+    @Query("UPDATE memo SET title = :content where serialNum = :serialNum")
     fun changeContent(content: String, serialNum: Int)
 }

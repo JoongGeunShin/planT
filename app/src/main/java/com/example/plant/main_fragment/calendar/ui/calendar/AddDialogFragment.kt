@@ -106,7 +106,7 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.saveScheduleBtn -> {
-                val content = binding.content.text.toString()
+                val content = binding.tvItemTitle.text.toString()
                 if (content.isEmpty() || importance == 3) { //내용 비었을 때, 중요도 설정 안하면 저장 X
                     FancyToast.makeText(
                         context,

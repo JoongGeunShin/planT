@@ -51,7 +51,7 @@ class MemoFragment : Fragment(R.layout.fragment_bottomnvi_memo) {
         binding.todayDate.text = "새로 추가할 일정"
         binding.todayDate.text
 
-        // 메모 저장
+        // 메모 저장 뺄 예정 
         binding.saveBtn.setOnClickListener {
             val memo = binding.memoEdit.text.toString()
             if (memo.isNotEmpty()){

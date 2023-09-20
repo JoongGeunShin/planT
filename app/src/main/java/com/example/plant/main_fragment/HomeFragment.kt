@@ -104,7 +104,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     // 장바구니
     private var isFabOpen = false
     private var jangBaguniItemCount = 0
-    private val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
+    val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -450,7 +450,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mainActivity) {
                         override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
+                                return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
                                     "도로명주소: $HOTPLACE_RoadAddress"
                         }
                     }
@@ -476,6 +476,8 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                             Log.d(ContentValues.TAG,latLng.toString())
                             Log.d(ContentValues.TAG,"위치 : ${marker.position}")
 //                            Log.d(ContentValues.TAG,infoWindow.toString())
+
+                            //제목만 따로 짜르고 나머지는 그냥 가져오기
                             jangBaguniItem.add(HashMap())
                             jangBaguniItem[jangBaguniItemCount].put("location", marker.position)
                             jangBaguniItem[jangBaguniItemCount].put("info",infoWindow.open(marker).toString())

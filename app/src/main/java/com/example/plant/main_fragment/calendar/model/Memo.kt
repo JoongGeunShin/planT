@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class Memo(
     @PrimaryKey(autoGenerate = true)
     val serialNum: Int, // 일련번호
-    val content: String, // 내용
-    val completion: Boolean // 체크 유무
+    val title: String, // 내용
+    val completion: Boolean, // 체크 유무
+    val description: String = "설명" //설명
 )
