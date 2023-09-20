@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="schedule"
+            type="com.example.plant.main_fragment.calendar.model.Schedule" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/classicBlue">
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="@id/timePicker"
+            app:layout_constraintStart_toStartOf="@id/timePicker"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/line_img"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@drawable/line_shape"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dateText"
+            tools:ignore="MissingConstraints" />
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:timePickerMode="spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_img"
+            tools:ignore="MissingConstraints" />
+
+        <TimePicker
+            android:id="@+id/timePicker2"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:timePickerMode="spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timePicker"
+            tools:ignore="MissingConstraints" />
+        <!--    android:theme="@style/TimePickerTheme"-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시작 시간"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_start_time"
+            app:layout_constraintStart_toStartOf="@id/dateText"
+            app:layout_constraintTop_toTopOf="@id/btn_start_time"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="종료 시간"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_end_time"
+            app:layout_constraintStart_toStartOf="@id/dateText"
+            app:layout_constraintTop_toTopOf="@id/btn_end_time"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btn_start_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="설정"
+            app:layout_constraintEnd_toEndOf="@id/dateText"
+            app:layout_constraintTop_toBottomOf="@id/timePicker2"
+            tools:ignore="MissingConstraints" />
+
+        <Button
+            android:id="@+id/btn_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="설정"
+            app:layout_constraintEnd_toEndOf="@id/dateText"
+            app:layout_constraintTop_toBottomOf="@id/btn_start_time"
+            tools:ignore="MissingConstraints" />
+
+
+        <EditText
+            android:id="@+id/content"
+            android:layout_width="270dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:hint="내용입력"
+            android:textColor="@color/white"
+            android:textColorHint="@color/light_gray"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/dateText"
+            app:layout_constraintStart_toStartOf="@id/dateText"
+            app:layout_constraintTop_toBottomOf="@id/btn_end_time"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/importanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="중요도"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/dateText"
+            app:layout_constraintStart_toStartOf="@id/dateText"
+            app:layout_constraintTop_toBottomOf="@id/content"
+            tools:ignore="MissingConstraints" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="@id/dateText"
+            app:layout_constraintStart_toStartOf="@id/dateText"
+            app:layout_constraintTop_toBottomOf="@id/importanceText"
+            tools:ignore="MissingConstraints">
+
+            <RadioButton
+                android:id="@+id/veryBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/red"
+                android:textColor="@color/red" />
+            <!--        android:text="@string/very"-->
+
+            <RadioButton
+                android:id="@+id/middleBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/blue"
+                android:textColor="@color/blue" />
+            <!--        android:text="@string/middle"-->
+
+            <RadioButton
+                android:id="@+id/lessBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/yellow"
+                android:textColor="@color/yellow" />
+            <!--        android:text="@string/little"-->
+        </RadioGroup>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
+            tools:ignore="MissingConstraints">
+
+            <Button
+                android:id="@+id/saveScheduleBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#00ff0000"
+                android:text="저장"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <Button
+                android:id="@+id/cancelDialogBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#00ff0000"
+                android:text="취소"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

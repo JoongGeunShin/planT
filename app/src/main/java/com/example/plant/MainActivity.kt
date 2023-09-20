@@ -3,13 +3,9 @@ package com.example.plant
 
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.Html
-import android.text.TextUtils.replace
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
@@ -17,34 +13,21 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.RecyclerView
-import com.example.plant.NaverGeocode.GeocodeDTO
-import com.example.plant.NaverGeocode.GeocodeInterface
 import com.example.plant.NaverSearch.LocationDTO
 import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
-import com.example.plant.main_fragment.CalendarFragment
+import com.example.plant.main_fragment.calendar.ui.calendar.CalendarFragment
 import com.example.plant.main_fragment.HomeFragment
-import com.example.plant.main_fragment.MapFinderFragment
 import com.example.plant.main_fragment.SettingsFragment
 import com.example.plant.main_fragment.UserinfoFragment
-import com.example.plant.pathfinder.NaverAPI
-import com.example.plant.pathfinder.ResultPath
+import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.naver.maps.geometry.Coord
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.CameraAnimation
-import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.MapFragment
-import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.PathOverlay
-import com.naver.maps.map.util.MarkerIcons
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -103,6 +86,14 @@ open class MainActivity : AppCompatActivity() {
                             ContextCompat.getColorStateList(this, R.color.color_bnv)
                         HomeFragment()
                         // Respond to navigation item 1 click
+                    }
+                    R.id.menu_memo -> {
+                        bnv_main.itemIconTintList =
+                            ContextCompat.getColorStateList(this, R.color.color_bnv)
+                        bnv_main.itemTextColor =
+                            ContextCompat.getColorStateList(this, R.color.color_bnv)
+                        MemoFragment()
+                        // Respond to navigation item 2 click
                     }
 
                     R.id.menu_calendar -> {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="bottomnvi_home"
             type="com.example.plant.main_fragment.HomeFragment" />
@@ -35,11 +36,11 @@
                 android:layout_marginLeft="100dp"
                 android:layout_marginTop="100dp"
                 android:layout_marginRight="100dp"
+                android:backgroundTint="@color/blank"
                 android:gravity="center"
                 android:text="@string/text_move_map_set_location"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                android:backgroundTint="@color/blank"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -70,16 +71,17 @@
                 app:layout_constraintEnd_toStartOf="@id/btn_findWay"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
+
             <Switch
                 android:id="@+id/switch_foodType"
-                android:layout_margin="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="16dp"
                 android:text="음식 종류 보이기"
                 android:textSize="10sp"
                 android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edt_searchLocation"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <LinearLayout
@@ -95,50 +97,57 @@
                     android:id="@+id/radioGrp_foodType"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="invisible"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
                     <RadioButton
                         android:id="@+id/radioBtn_chicken"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="치킨"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_pizza"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="피자"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_jokbal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="족발,보쌈"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_zzim"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="찜,탕"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_noodle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="면"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_bunsik"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="분식"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_typenun"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="없음"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
                 </RadioGroup>
             </LinearLayout>
 
@@ -168,40 +177,46 @@
                     android:id="@+id/radioGrp_Category"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="invisible"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
                     <RadioButton
                         android:id="@+id/radioBtn_food"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="음식점"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_cafe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="카페"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_beverage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="술집"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_pub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="펍"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
+
                     <RadioButton
                         android:id="@+id/radioBtn_cateogorynun"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="없음"
-                        android:textSize="12sp"/>
+                        android:textSize="12sp" />
                 </RadioGroup>
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_items"
                 android:layout_width="match_parent"
@@ -227,34 +242,46 @@
                 app:layout_constraintStart_toEndOf="@+id/edt_searchLocation"
                 app:layout_constraintTop_toTopOf="@+id/map_fragment" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_firstCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:visibility="invisible"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_arrow_refresh"
                 android:text="처음"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toStartOf="@id/btn_nextCamera"
                 app:layout_constraintStart_toEndOf="@id/btn_prevCamera" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_nextCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:visibility="invisible"
+                android:layout_marginRight="70dp"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_arrow_right"
                 android:text="다음"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_firstCamera" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_prevCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:visibility="invisible"
+                android:layout_marginLeft="70dp"
+                android:backgroundTint="@color/blank"
+                android:src="@drawable/ic_arrow_left"
                 android:text="이전"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toTopOf="@+id/tv_location"
+                app:layout_constraintEnd_toStartOf="@id/btn_firstCamera"
+                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <!--            map_finder로 framelayout-->
@@ -274,93 +301,95 @@
                 android:layout_width="@dimen/design_fab_size_normal"
                 android:layout_height="@dimen/design_fab_size_normal"
                 android:layout_margin="20dp"
+                android:contentDescription="TODO"
                 android:src="@drawable/ic_home_jangbaguni"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:fabCustomSize="@dimen/design_fab_size_normal"
-                android:contentDescription="TODO" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem1"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
+                android:contentDescription="TODO"
                 android:text="first item"
                 android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem2"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
+                android:contentDescription="TODO"
                 android:text="first item"
                 android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem3"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
-                android:visibility="invisible"
+                android:contentDescription="TODO"
                 android:text="first item"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                android:visibility="invisible"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem4"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
-                android:visibility="invisible"
+                android:contentDescription="TODO"
                 android:text="first item"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                android:visibility="invisible"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem5"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
+                android:contentDescription="TODO"
                 android:text="first item"
                 android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_jangbaguniItem6"
                 android:layout_width="@dimen/design_fab_size_mini"
                 android:layout_height="@dimen/design_fab_size_mini"
                 android:layout_margin="20dp"
+                android:contentDescription="TODO"
                 android:text="first item"
                 android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:fabCustomSize="@dimen/design_fab_size_mini"
                 app:layout_constraintBottom_toBottomOf="@id/fab_jangbaguni"
                 app:layout_constraintEnd_toEndOf="@+id/fab_jangbaguni"
-                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni"
-                app:fabCustomSize="@dimen/design_fab_size_mini"
-                android:contentDescription="TODO" />
+                app:layout_constraintStart_toStartOf="@+id/fab_jangbaguni"
+                app:layout_constraintTop_toTopOf="@+id/fab_jangbaguni" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 </layout>

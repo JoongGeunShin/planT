@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.HOTPLACE.HOTPLACEDTO
@@ -556,6 +558,14 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     fun hideMapFinder(state: Boolean) {
         if (state) binding.frameLayoutMapFinder.visibility =
             View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
+    }
+    fun hideCameraAct(state: Boolean) {
+        if (state) binding.btnFirstCamera.visibility =
+            View.GONE else binding.btnFirstCamera.visibility = View.VISIBLE
+        if (state) binding.btnNextCamera.visibility =
+            View.GONE else binding.btnNextCamera.visibility = View.VISIBLE
+        if (state) binding.btnPrevCamera.visibility =
+            View.GONE else binding.btnPrevCamera.visibility = View.VISIBLE
     }
     lateinit var coord: Coord
     fun moveToSearchedLocation(x: Double, y: Double, type: String, boolean: Boolean) {
