@@ -43,6 +43,28 @@ class ScheduleModifyFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.timePicker.visibility = TimePicker.GONE // 타임피커 기본설정
+        binding.timePicker2.visibility = TimePicker.GONE
+        // 시작 클릭 listener
+        binding.btnStartTime.setOnClickListener {
+            binding.timePicker2.visibility = TimePicker.GONE
+            binding.timePicker.visibility = TimePicker.VISIBLE
+            binding.timePicker.setIs24HourView(true)
+        }
+        // 종료 클릭 listener
+        binding.btnEndTime.setOnClickListener {
+            binding.timePicker.visibility = TimePicker.GONE
+            binding.timePicker2.visibility = TimePicker.VISIBLE
+            binding.timePicker2.setIs24HourView(true)
+
+        }
+        //실시간으로 타임 피커의 시간 보여주는 기능
+        binding.timePicker.setOnTimeChangedListener{view, hourOfDay, minute ->
+            binding.btnStartTime.text = binding.timePicker.hour.toString() +":"+binding.timePicker.minute.toString()
+        }
+        binding.timePicker2.setOnTimeChangedListener{view, hourOfDay, minute ->
+            binding.btnEndTime.text = binding.timePicker2.hour.toString() + ":" + binding.timePicker2.minute.toString()
+        }
         // 체크박스 클릭 시 변경
 //        binding.alarmOnOffBtn.setOnCheckedChangeListener { _, isChecked ->
 //            if (isChecked){

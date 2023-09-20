@@ -76,6 +76,7 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
                 binding.timePicker2.setIs24HourView(true)
 
         }
+        //실시간으로 타임 피커의 시간 보여주는 기능
         binding.timePicker.setOnTimeChangedListener{view, hourOfDay, minute ->
             binding.btnStartTime.text = binding.timePicker.hour.toString() +":"+binding.timePicker.minute.toString()
         }

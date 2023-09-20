@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
 import com.example.plant.MainActivity
@@ -32,7 +33,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Collections
 
-class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener{
+class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener {
 
     private val binding by viewBinding(FragmentBottomnviCalendarBinding::bind,
         onViewDestroyed = { binding ->
@@ -57,6 +58,15 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnAddschedule.setOnClickListener(this)
+        //스크롤 이벤트
+//        binding.scheduleListview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if (scrollPercent(binding.scheduleListview) >= 100) {
+//                    //dataLoading()
+//                }
+//            }
+//        })
 
 
         binding.calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 출력
@@ -142,13 +152,14 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.btn_addschedule -> { // open AddDialog
                 val dialog = AddDialogFragment()
                 dialog.show(parentFragmentManager, "AddScheduleDialog")
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         binding.calendarView.selectedDate = CalendarDay.today()
@@ -161,11 +172,20 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
         Log.e(TAG, "onResume()")
     }
 
-    companion object{
+    companion object {
         const val TAG = "CalendarFragment"
     }
-}
 
+
+    //리사이클러 스크롤이벤트
+//    fun scrollPercent(recyclerView: RecyclerView): Double {
+//        return (recyclerView.computeVerticalScrollOffset() * 1.0 / (recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent())) * 100.0
+//    }
+//
+//    fun RecyclerView.scrollPercent() : Double {
+//        return (this.computeVerticalScrollOffset() * 1.0 / (this.computeVerticalScrollRange() - this.computeVerticalScrollExtent())) * 100.0
+//    }
+}
 
 //        binding.calendarView.setOnDateChangedListener { widget:MaterialCalendarView, date: CalendarDay, selected: Boolean  ->
 //            binding.diaryTextView.visibility = View.VISIBLE
