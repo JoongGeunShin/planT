@@ -33,7 +33,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Collections
 
-class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener {
+class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener {
 
     private val binding by viewBinding(FragmentBottomnviCalendarBinding::bind,
         onViewDestroyed = { binding ->
@@ -41,8 +41,6 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
         })
 
     lateinit var mainActivity: MainActivity
-
-    //
     private lateinit var selectedDate: String // 달력에서 선택한 날짜
     private val scheduleAdapter by lazy { ScheduleAdapter() }
     private val dateSaveModule: DateSaveModule by inject() // 날짜를 저장하는 DataStore
@@ -58,16 +56,6 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
         super.onViewCreated(view, savedInstanceState)
 
         binding.btnAddschedule.setOnClickListener(this)
-        //스크롤 이벤트
-//        binding.scheduleListview.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if (scrollPercent(binding.scheduleListview) >= 100) {
-//                    //dataLoading()
-//                }
-//            }
-//        })
-
 
         binding.calendarView.selectedDate = CalendarDay.today() // 오늘 날짜 출력
         binding.calendarView.addDecorators(SaturdayDecorator(), SundayDecorator()) // 주말 강조
@@ -175,134 +163,4 @@ class CalendarFragment:  Fragment(R.layout.fragment_bottomnvi_calendar), View.On
     companion object {
         const val TAG = "CalendarFragment"
     }
-
-
-    //리사이클러 스크롤이벤트
-//    fun scrollPercent(recyclerView: RecyclerView): Double {
-//        return (recyclerView.computeVerticalScrollOffset() * 1.0 / (recyclerView.computeVerticalScrollRange() - recyclerView.computeVerticalScrollExtent())) * 100.0
-//    }
-//
-//    fun RecyclerView.scrollPercent() : Double {
-//        return (this.computeVerticalScrollOffset() * 1.0 / (this.computeVerticalScrollRange() - this.computeVerticalScrollExtent())) * 100.0
-//    }
 }
-
-//        binding.calendarView.setOnDateChangedListener { widget:MaterialCalendarView, date: CalendarDay, selected: Boolean  ->
-//            binding.diaryTextView.visibility = View.VISIBLE
-//            binding.btnPlus.visibility = View.VISIBLE
-//            binding.contextEditText.visibility = View.INVISIBLE
-//            binding.diaryContent.visibility = View.INVISIBLE
-//            binding.btnUpdate.visibility = View.INVISIBLE
-//            binding.btnDelete.visibility = View.INVISIBLE
-//            binding.btnComplete.visibility = View.INVISIBLE
-//            binding.diaryTextView.text = String.format("%d / %d / %d", date.year, date.month, date.day)
-//            binding.contextEditText.setText("")
-//            checkDay(date.year, date.month, date.day, userID)
-//        }
-//
-//        binding.btnPlus.setOnClickListener {
-//            binding.contextEditText.visibility = View.VISIBLE
-//            binding.btnPlus.visibility = View.INVISIBLE
-//            binding.btnComplete.visibility = View.VISIBLE
-//            binding.btnUpdate.visibility = View.INVISIBLE
-//            binding.btnDelete.visibility = View.INVISIBLE
-////            str = binding.contextEditText.text.toString()
-////            binding.diaryContent.text = str
-////            binding.diaryContent.visibility = View.VISIBLE
-//        }
-//        binding.btnComplete.setOnClickListener {
-//            saveDiary(fname)
-//            binding.contextEditText.visibility = View.VISIBLE
-//            binding.btnPlus.visibility = View.INVISIBLE
-//            binding.btnComplete.visibility = View.INVISIBLE
-//            binding.btnUpdate.visibility = View.VISIBLE
-//            binding.btnDelete.visibility = View.VISIBLE
-//            str = binding.contextEditText.text.toString()
-//            binding.diaryContent.text = str
-//            binding.diaryContent.visibility = View.VISIBLE
-//        }
-
-
-//    fun checkDay(cYear: Int, cMonth: Int, cDay: Int, userID: String) {
-//        //저장할 파일 이름설정
-//        fname = "" + userID + cYear + "-" + (cMonth + 1) + "" + "-" + cDay + ".txt"
-//
-//        var fileInputStream: FileInputStream
-//        try {
-//            fileInputStream = mainActivity.openFileInput(fname)
-//            val fileData = ByteArray(fileInputStream.available())
-//            fileInputStream.read(fileData)
-//            fileInputStream.close()
-//            str = String(fileData)
-//            binding.contextEditText.visibility = View.INVISIBLE
-//            binding.diaryContent.visibility = View.VISIBLE
-//            binding.diaryContent.text = str
-//            binding.btnPlus.visibility = View.INVISIBLE
-//            binding.btnUpdate.visibility = View.VISIBLE
-//            binding.btnDelete.visibility = View.VISIBLE
-//            binding.btnComplete.visibility = View.INVISIBLE
-//            binding.btnUpdate.setOnClickListener {
-//                binding.contextEditText.visibility = View.VISIBLE
-//                binding.diaryContent.visibility = View.INVISIBLE
-//                binding.contextEditText.setText(str)
-//                //여기바꿈
-//                binding.btnPlus.visibility = View.INVISIBLE
-//                binding.btnComplete.visibility = View.VISIBLE
-//                binding.btnUpdate.visibility = View.INVISIBLE
-//                binding.btnDelete.visibility = View.INVISIBLE
-//                binding.diaryContent.text = binding.contextEditText.text
-//            }
-//            binding.btnDelete.setOnClickListener {
-//                binding.diaryContent.visibility = View.INVISIBLE
-//                binding.btnUpdate.visibility = View.INVISIBLE
-//                binding.btnDelete.visibility = View.INVISIBLE
-//                binding.btnComplete.visibility = View.INVISIBLE
-//                binding.contextEditText.setText("")
-//                binding.contextEditText.visibility = View.VISIBLE
-//                binding.btnPlus.visibility = View.VISIBLE
-//                removeDiary(fname)
-//            }
-//            if (binding.diaryContent.text == null) {
-//                binding.diaryContent.visibility = View.INVISIBLE
-//                binding.btnUpdate.visibility = View.INVISIBLE
-//                binding.btnDelete.visibility = View.INVISIBLE
-//                binding.btnComplete.visibility = View.INVISIBLE
-//                binding.diaryTextView.visibility = View.VISIBLE
-//                binding.btnPlus.visibility = View.VISIBLE
-//                binding. contextEditText.visibility = View.VISIBLE
-//            }
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-//
-//
-//    // 달력 내용 제거
-//    @SuppressLint("WrongConstant")
-//    fun removeDiary(readDay: String?) {
-//        var fileOutputStream: FileOutputStream
-//        try {
-//            fileOutputStream = mainActivity.openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS)
-//
-//            val content = ""
-//            fileOutputStream.write(content.toByteArray())
-//            fileOutputStream.close()
-//        } catch (e: java.lang.Exception) {
-//            e.printStackTrace()
-//        }
-//    }
-//
-//
-//    // 달력 내용 추가
-//    @SuppressLint("WrongConstant")
-//    fun saveDiary(readDay: String?) {
-//        var fileOutputStream: FileOutputStream
-//        try {
-//            fileOutputStream = mainActivity.openFileOutput(readDay, MODE_NO_LOCALIZED_COLLATORS)
-//            val content = binding.contextEditText.text.toString()
-//            fileOutputStream.write(content.toByteArray())
-//            fileOutputStream.close()
-//        } catch (e: java.lang.Exception) {
-//            e.printStackTrace()
-//        }
-//    }

@@ -15,6 +15,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.HOTPLACE.HOTPLACEDTO
 import com.example.plant.HOTPLACE.HOTPLACESearchInterface
@@ -27,6 +30,8 @@ import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.R
 import com.example.plant.databinding.FragmentBottomnviHomeBinding
+import com.example.plant.main_fragment.calendar.model.Memo
+import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import com.example.plant.pathfinder.NaverAPI
 import com.example.plant.pathfinder.ResultPath
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -46,6 +51,10 @@ import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -60,6 +69,10 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     // 마커 찍기
     private val marker = Marker()
+
+    // 장바구니
+    val serialNum = 0 // 메모 일련번호
+    private val memoViewModel : MemoViewModel by viewModel()
 
     // Geocode
     val GEOCODE_CLIENT_ID = "u04wstprb6"
@@ -104,7 +117,8 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     // 장바구니
     private var isFabOpen = false
     private var jangBaguniItemCount = 0
-    val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
+    private val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
+    private var livedataOfjangBaguniItemCount = MutableLiveData<Int>()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -127,6 +141,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val fm = childFragmentManager
+
         //길찾기
         fm.beginTransaction().add(R.id.frameLayoutMapFinder, fragmentChild).commit()
 
@@ -204,7 +219,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         }
         binding.switchFoodType.setOnCheckedChangeListener{
-            p0, isChecked ->
+                p0, isChecked ->
             if(isChecked) {
                 binding.radioGrpFoodType.visibility = View.VISIBLE
             }else{
@@ -220,7 +235,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         }
         binding.radioGrpFoodType.setOnCheckedChangeListener{
-            group, checkedId ->
+                group, checkedId ->
             when(checkedId){
                 R.id.radioBtn_pizza -> foodTypeString = "피자"
                 R.id.radioBtn_chicken -> foodTypeString = "치킨"
@@ -323,7 +338,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         }
 
     }
-//    private var jangBaguniItemCount = 0
+    //    private var jangBaguniItemCount = 0
 //    private lateinit var jangBaguniItem : MutableList<HashMap<String,Any>>
     fun toggleFab() {
         Toast.makeText(mainActivity, "메인 플로팅 버튼 클릭 : $isFabOpen", Toast.LENGTH_SHORT).show()
@@ -450,7 +465,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mainActivity) {
                         override fun getText(infoWindow: InfoWindow): CharSequence {
-                                return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
+                            return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
                                     "도로명주소: $HOTPLACE_RoadAddress"
                         }
                     }
@@ -475,14 +490,25 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                         naverMap.setOnMapLongClickListener { pointF, latLng ->
                             Log.d(ContentValues.TAG,latLng.toString())
                             Log.d(ContentValues.TAG,"위치 : ${marker.position}")
-//                            Log.d(ContentValues.TAG,infoWindow.toString())
-
-                            //제목만 따로 짜르고 나머지는 그냥 가져오기
                             jangBaguniItem.add(HashMap())
                             jangBaguniItem[jangBaguniItemCount].put("location", marker.position)
                             jangBaguniItem[jangBaguniItemCount].put("info",infoWindow.open(marker).toString())
                             jangBaguniItemCount++
+                            Log.d(ContentValues.TAG, "테스트세트스트세스${jangBaguniItem[0].toString()}")
                             Toast.makeText(mainActivity,"$jangBaguniItemCount 번째 장바구니에 담겼습니다!",Toast.LENGTH_SHORT).show()
+
+                            //장바구니 추가
+                            if (jangBaguniItem.isNotEmpty()) {
+                                val title = HOTPLACE_Title
+                                val category = HOTPLACE_Category
+                                val roadaddress = HOTPLACE_RoadAddress
+                                lifecycleScope.launch {
+                                    withContext(Dispatchers.IO) {
+                                        memoViewModel.addMemo(Memo(serialNum, title, category, roadaddress, false ))
+                                    }
+                                }
+                            }
+                            //----
                         }
                         true
                     }
@@ -554,7 +580,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     //tvParent.text = data -> 바꿔야함
     override fun onReceivedData(data: String) {
-    // tvParent.text = data
+        // tvParent.text = data
     }
     // visible 설정
     fun hideMapFinder(state: Boolean) {
@@ -717,6 +743,3 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
     }
 }
-
-
-
