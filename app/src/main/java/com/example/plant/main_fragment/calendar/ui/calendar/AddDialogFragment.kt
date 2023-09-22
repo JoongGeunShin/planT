@@ -41,6 +41,9 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     private var serialNum = 0 // 일련번호
     private var importance = 3 // 일정 중요도 (기본값 : 3 (어떤 항목도 선택되지 않았을 때) )
 
+    lateinit var content: String
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -93,7 +96,7 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.saveScheduleBtn -> {
-                val content = binding.tvItemTitle.text.toString()
+                content = binding.tvItemTitle.text.toString()
                 if (content.isEmpty()) { //내용 비었을 때, 설정 안하면 저장 X
                     FancyToast.makeText(
                         context,

@@ -1,7 +1,9 @@
 package com.example.plant.main_fragment.calendar.ui.calendar
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
 import com.example.plant.databinding.AddWishlistDialogBinding
+import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.adapter.MemoAdapter
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구니 추가 다이어로그
@@ -22,6 +26,9 @@ class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구
     //바꿔야함
     private val binding by viewBinding(AddWishlistDialogBinding::bind)
     private val memoViewModel: MemoViewModel by viewModel()
+    private lateinit var addDialogFragment: AddDialogFragment
+
+
     
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,8 +42,9 @@ class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val serialNum = 0 //메모 일련번호
         val adapter = MemoAdapter(requireContext(), memoViewModel)
+        val serialNum = 0 //메모 일련번호
+
 
         binding.todayDate.text = "장바구니"
         binding.todayDate.text
@@ -52,30 +60,39 @@ class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구
         })
 
 
+//        binding.todoListView.adapter
+//        binding.todoListView.setOnClickListener{
+//            addDialogFragment.content = adapter.title
+//            Log.d(ContentValues.TAG, "되는거겟지")
+//            this.dismiss()
+//        }
 
     }
 
     override fun onClick(v: View?) {
         when(v?.id) {
-            R.id.btn_choose_wishlist -> {
-                //선택버튼 누르면 메모의 title받아와서 내용에 적어야함
-
-
-
-            }
-
             R.id.btn_cancel_wishlist -> {
+                Log.d(ContentValues.TAG, "되냐왜안되냐")
+                this.dismiss()
+            }
+            R.id.todoListView ->{
+                val adapter = MemoAdapter(requireContext(), memoViewModel)
+                binding.todoListView.adapter
+                addDialogFragment.content = adapter.title
+                Log.d(ContentValues.TAG, "되는거겟지")
                 this.dismiss()
             }
 
-            R.id.todoListView -> {
-//                val text = binding.todoListView.adapter
-//                text
-//                val title =
-//                Intent(context, AddDialogFragment::class.java).apply{
-//                    putExtra("title", )
-//                }
-            }
+//            R.id.todoListView -> {
+//                binding.todoListView.adapter
+//                val title = MemoAdapter.Holder
+////                val text = binding.todoListView.adapter
+////                text
+////                val title =
+////                Intent(context, AddDialogFragment::class.java).apply{
+////                    putExtra("title", )
+////                }
+//            }
 
         }
     }

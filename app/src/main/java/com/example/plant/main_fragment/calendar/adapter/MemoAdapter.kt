@@ -27,8 +27,11 @@ class MemoAdapter (
     var list = ArrayList<Memo>()
     private lateinit var binding: MemoItemBinding
 
+    lateinit var title: String
+
     interface ItemClick {
         fun onClick(view: View, position: Int, list: ArrayList<Memo>)
+
     }
 
     var itemClick: ItemClick? = null
@@ -57,14 +60,21 @@ class MemoAdapter (
     inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
         fun onBind(item: Memo) {
             binding.memo = item
-            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
-            binding.completionBox.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    changeCompletion(b, item.serialNum)
-                } else {
-                    changeCompletion(b, item.serialNum)
-                }
+            binding.itemCard.setOnClickListener{
+                title = item.title
             }
+
+//            binding.memo = item
+//            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
+//            binding.completionBox.setOnCheckedChangeListener { _, b ->
+//                if (b) {
+//                    changeCompletion(b, item.serialNum)
+//                } else {
+//                    changeCompletion(b, item.serialNum)
+//                }
+//            }
+
+
         }
         private fun changeCompletion(completion: Boolean, serialNum: Int) { // 체크 유무 변경
             viewModel.changeCompletion(completion, serialNum)
