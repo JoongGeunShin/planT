@@ -97,8 +97,8 @@
                     android:id="@+id/radioGrp_foodType"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:visibility="invisible">
+                    android:visibility="invisible"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radioBtn_chicken"
@@ -171,14 +171,14 @@
                 android:layout_margin="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_foodType">
+                app:layout_constraintTop_toBottomOf="@+id/switch_foodCategory">
 
                 <RadioGroup
                     android:id="@+id/radioGrp_Category"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:visibility="invisible">
+                    android:visibility="invisible"
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radioBtn_food"

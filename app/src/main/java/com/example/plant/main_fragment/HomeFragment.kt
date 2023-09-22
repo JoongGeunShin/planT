@@ -187,12 +187,6 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         // 위치에서 탐색하기 클릭시 뜨게 하기
         binding.btnFindMapItems.setOnClickListener {
             Toast.makeText(mainActivity,"위치에서 탐색하기 버튼 click",Toast.LENGTH_SHORT).show()
-            // 현재 위치 중심을 토대로 원 생성
-//            circleOverlay.center = naverMap.cameraPosition.target
-//            circleOverlay.outlineWidth = 12
-//            circleOverlay.radius = 1000.0
-//            circleOverlay.color = 0
-//            circleOverlay.map = naverMap
 
             val latlng_string = "%.9f".format(naverMap.cameraPosition.target.longitude) + "," + "%.9f".format(naverMap.cameraPosition.target.latitude)
             Log.d(ContentValues.TAG,"1st... 위치에서 탐색하기 탭 클릭 $latlng_string}")
@@ -208,7 +202,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             if(isChecked) {
                 binding.radioGrpFoodType.visibility = View.VISIBLE
             }else{
-                binding.radioGrpFoodType.visibility = View.INVISIBLE
+                binding.radioGrpFoodType.visibility = View.GONE
             }
         }
         binding.switchFoodCategory.setOnCheckedChangeListener{
@@ -216,7 +210,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             if(isChecked) {
                 binding.radioGrpCategory.visibility = View.VISIBLE
             }else{
-                binding.radioGrpCategory.visibility = View.INVISIBLE
+                binding.radioGrpCategory.visibility = View.GONE
             }
         }
         binding.radioGrpFoodType.setOnCheckedChangeListener{
