@@ -1,18 +1,16 @@
 package com.example.plant.main_fragment.calendar.adapter
 
+import android.content.ContentValues
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
+import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 //import androidx.room.processor.Context
-import com.example.plant.R
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.model.Memo
-import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.ui.memo.ItemTouchHelperListener
 import com.example.plant.main_fragment.calendar.ui.memo.MemoModifyFragment
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
@@ -29,8 +27,11 @@ class MemoAdapter (
     var list = ArrayList<Memo>()
     private lateinit var binding: MemoItemBinding
 
+    lateinit var title: String
+
     interface ItemClick {
         fun onClick(view: View, position: Int, list: ArrayList<Memo>)
+
     }
 
     var itemClick: ItemClick? = null
@@ -59,14 +60,21 @@ class MemoAdapter (
     inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
         fun onBind(item: Memo) {
             binding.memo = item
-            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
-            binding.completionBox.setOnCheckedChangeListener { _, b ->
-                if (b) {
-                    changeCompletion(b, item.serialNum)
-                } else {
-                    changeCompletion(b, item.serialNum)
-                }
+            binding.itemCard.setOnClickListener{
+                title = item.title
             }
+
+//            binding.memo = item
+//            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
+//            binding.completionBox.setOnCheckedChangeListener { _, b ->
+//                if (b) {
+//                    changeCompletion(b, item.serialNum)
+//                } else {
+//                    changeCompletion(b, item.serialNum)
+//                }
+//            }
+
+
         }
         private fun changeCompletion(completion: Boolean, serialNum: Int) { // 체크 유무 변경
             viewModel.changeCompletion(completion, serialNum)
@@ -75,7 +83,7 @@ class MemoAdapter (
 
     override fun onLeftClick(position: Int, viewHolder: RecyclerView.ViewHolder?) { // 메모 변경
         val dialog = MemoModifyFragment().apply {
-            content = list[position].content
+            content = list[position].title
             serialNum = list[position].serialNum
         }
         dialog.show((context as FragmentActivity).supportFragmentManager, "MemoModifyFragment")

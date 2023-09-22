@@ -92,7 +92,7 @@ class ScheduleModifyFragment(
 
         binding.saveScheduleBtn.setOnClickListener {
             val date = binding.date.text.toString() // 날짜
-            val content = binding.content.text.toString() // 내용
+            val content = binding.tvItemTitle.text.toString() // 내용
             if (content.isEmpty() || importance==3){ //내용 비었을 때 or 중요도 설정 안하면 저장 X
                 FancyToast.makeText(context,"내용 또는 중요도를 입력해주세요",
                     FancyToast.LENGTH_SHORT,

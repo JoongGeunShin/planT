@@ -51,73 +51,24 @@
                 app:layout_constraintTop_toBottomOf="@id/view1"
                 tools:ignore="MissingConstraints">
 
-                <EditText
-                    android:id="@+id/memoEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:hint="해야할 일"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/classicBlue"
-                    android:textSize="13sp"
-                    app:layout_constraintEnd_toStartOf="@id/saveBtn"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="MissingConstraints" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <Button
-                    android:id="@+id/saveBtn"
-                    android:layout_width="75dp"
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view1">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/todoListView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#00ff0000"
-                    android:backgroundTint="@color/classicBlue"
-                    android:text="저장"
-                    android:textColor="@color/white"
+                    android:layout_margin="25dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    tools:ignore="MissingConstraints" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintStart_toStartOf="parent"/>
+            </ScrollView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/view3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="25dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view2"
-                tools:ignore="MissingConstraints">
-
-                <ImageView
-                    android:id="@+id/circle_img"
-                    android:layout_width="8dp"
-                    android:layout_height="8dp"
-                    android:src="@drawable/white_circle"
-                    app:layout_constraintBottom_toBottomOf="@id/listText"
-                    app:layout_constraintTop_toTopOf="@id/listText" />
-
-                <TextView
-                    android:id="@+id/listText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:gravity="center"
-                    android:text="할일 리스트"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/circle_img"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="MissingConstraints" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/todoListView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="25dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/view3"
-                tools:ignore="MissingConstraints" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
