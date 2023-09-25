@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plant.R
 //import androidx.room.processor.Context
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.model.Memo
@@ -18,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MemoAdapter (
+class MemoAdapter(
     //private val context: Context,
     private val context: android.content.Context,
     private val viewModel: MemoViewModel
@@ -40,17 +41,20 @@ class MemoAdapter (
         val inflater = LayoutInflater.from(context)
         binding = MemoItemBinding.inflate(inflater, parent, false)
         return Holder(binding.root)
+//        val cardView = LayoutInflater.from(parent.context)
+//            .inflate(R.layout.memo_item, parent, false)
+//        return Holder(cardView)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        Log.d(ContentValues.TAG,"MemoAdapter 호출됨")
+        Log.d(ContentValues.TAG, "MemoAdapter 호출됨")
         holder.onBind(list[position])
         if (itemClick != null) {
             binding.completionBox.setOnClickListener { v ->
                 itemClick?.onClick(v, position, list)
-                Log.d(ContentValues.TAG,title)
+                Log.d(ContentValues.TAG, title)
             }
-            Log.d(ContentValues.TAG,itemClick.toString())
+            Log.d(ContentValues.TAG, itemClick.toString())
         }
     }
 
@@ -62,12 +66,22 @@ class MemoAdapter (
 
     inner class Holder(val view: View) : RecyclerView.ViewHolder(view) {
         fun onBind(item: Memo) {
+//            binding.memo = item
+//            binding.itemCard.setOnClickListener{
+//                title = item.title
+//            }
             binding.memo = item
-            binding.itemCard.setOnClickListener{
-                title = item.title
+            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
+            binding.completionBox.setOnCheckedChangeListener { _, b ->
+                if (b) {
+                    changeCompletion(b, item.serialNum)
+                } else {
+                    changeCompletion(b, item.serialNum)
+                }
             }
-
         }
+
+
         private fun changeCompletion(completion: Boolean, serialNum: Int) { // 체크 유무 변경
             viewModel.changeCompletion(completion, serialNum)
         }
