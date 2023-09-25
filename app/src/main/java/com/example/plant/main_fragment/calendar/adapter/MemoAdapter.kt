@@ -43,11 +43,14 @@ class MemoAdapter (
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
+        Log.d(ContentValues.TAG,"MemoAdapter 호출됨")
         holder.onBind(list[position])
         if (itemClick != null) {
             binding.completionBox.setOnClickListener { v ->
                 itemClick?.onClick(v, position, list)
+                Log.d(ContentValues.TAG,title)
             }
+            Log.d(ContentValues.TAG,itemClick.toString())
         }
     }
 
@@ -63,17 +66,6 @@ class MemoAdapter (
             binding.itemCard.setOnClickListener{
                 title = item.title
             }
-
-//            binding.memo = item
-//            binding.completionBox.isChecked = item.completion // 체크 유무 셋팅
-//            binding.completionBox.setOnCheckedChangeListener { _, b ->
-//                if (b) {
-//                    changeCompletion(b, item.serialNum)
-//                } else {
-//                    changeCompletion(b, item.serialNum)
-//                }
-//            }
-
 
         }
         private fun changeCompletion(completion: Boolean, serialNum: Int) { // 체크 유무 변경
@@ -100,30 +92,4 @@ class MemoAdapter (
     override fun onItemSwipe(position: Int) { // }
     }
 
-//    object DataBindingUtil {
-//        @BindingAdapter("set_image")
-//        @JvmStatic
-//        fun setImageResource(view: ImageView, item: Schedule) { // 일정 중요도에 따라 이미지 셋팅
-//            val redImg =
-//                ContextCompat.getDrawable(view.context, R.drawable.red_most_important) // 1순위
-//            val blueImg =
-//                ContextCompat.getDrawable(view.context, R.drawable.blue_moderately_important) // 2순위
-//            val yellowImg =
-//                ContextCompat.getDrawable(view.context, R.drawable.yellow_least_important) // 3순위
-//
-//            item.let { schedule ->
-//                when (schedule.importance) {
-//                    0 -> {
-//                        view.setImageDrawable(redImg)
-//                    }
-//                    1 -> {
-//                        view.setImageDrawable(blueImg)
-//                    }
-//                    2 -> {
-//                        view.setImageDrawable(yellowImg)
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

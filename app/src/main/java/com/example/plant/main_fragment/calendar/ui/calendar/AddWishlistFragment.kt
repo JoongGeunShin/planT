@@ -21,7 +21,7 @@ import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구니 추가 다이어로그
+class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로그
 
     //바꿔야함
     private val binding by viewBinding(AddWishlistDialogBinding::bind)
@@ -42,12 +42,13 @@ class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d(ContentValues.TAG, "AddWishlistFragment 열림")
+
         val adapter = MemoAdapter(requireContext(), memoViewModel)
         val serialNum = 0 //메모 일련번호
 
 
         binding.todayDate.text = "장바구니"
-        binding.todayDate.text
 
         //모든 메모 가져오기
         memoViewModel.getAllMemo().observe(viewLifecycleOwner, Observer { list ->
@@ -59,42 +60,18 @@ class AddWishlistFragment: DialogFragment(), View.OnClickListener { // 장바구
             binding.todoListView.layoutManager = LinearLayoutManager(requireContext())
         })
 
-
-//        binding.todoListView.adapter
-//        binding.todoListView.setOnClickListener{
-//            addDialogFragment.content = adapter.title
-//            Log.d(ContentValues.TAG, "되는거겟지")
-//            this.dismiss()
-//        }
-
-    }
-
-    override fun onClick(v: View?) {
-        when(v?.id) {
-            R.id.btn_cancel_wishlist -> {
-                Log.d(ContentValues.TAG, "되냐왜안되냐")
-                this.dismiss()
-            }
-            R.id.todoListView ->{
-                val adapter = MemoAdapter(requireContext(), memoViewModel)
-                binding.todoListView.adapter
-                addDialogFragment.content = adapter.title
-                Log.d(ContentValues.TAG, "되는거겟지")
-                this.dismiss()
-            }
-
-//            R.id.todoListView -> {
-//                binding.todoListView.adapter
-//                val title = MemoAdapter.Holder
-////                val text = binding.todoListView.adapter
-////                text
-////                val title =
-////                Intent(context, AddDialogFragment::class.java).apply{
-////                    putExtra("title", )
-////                }
-//            }
-
+        binding.btnCancelWishlist.setOnClickListener {
+            this.dismiss()
         }
+        binding.todoListView.setOnClickListener {
+            binding.todoListView.adapter
+            addDialogFragment.content = adapter.title
+            Log.d(ContentValues.TAG, "되는거겟지")
+            this.dismiss()
+        }
+//        binding.todoListView.setOnClickListener {
+//            adapter.list.get("title")
+//        }
     }
 
 }
