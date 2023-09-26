@@ -38,18 +38,17 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/view2"
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/btn_cancel_wishlist"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/sv_todolist"
+            android:layout_margin="5dp"
+            android:background="#00ff0000"
+            android:text="취소"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view1"
-            tools:ignore="MissingConstraints">
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toBottomOf="@id/view1" />
 
         <ScrollView
             android:id="@+id/sv_todolist"
@@ -60,8 +59,7 @@
             android:scrollbars="none"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view1"
-            app:layout_constraintBottom_toTopOf="@id/view4">
+            app:layout_constraintTop_toBottomOf="@id/btn_cancel_wishlist">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/todoListView"
@@ -71,30 +69,6 @@
                 app:layout_constraintEnd_toEndOf="@id/sv_todolist"
                 app:layout_constraintStart_toStartOf="@id/sv_todolist" />
         </ScrollView>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/view4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sv_todolist"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-
-            <Button
-                android:id="@+id/btn_cancel_wishlist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="#00ff0000"
-                android:text="취소"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/view4" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

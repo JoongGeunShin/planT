@@ -16,6 +16,7 @@ import com.example.plant.R
 import com.example.plant.databinding.AddWishlistDialogBinding
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.adapter.MemoAdapter
+import com.example.plant.main_fragment.calendar.adapter.WishListAdapter
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import org.jetbrains.anko.sdk25.coroutines.onClick
@@ -44,7 +45,7 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
 
         Log.d(ContentValues.TAG, "AddWishlistFragment 열림")
 
-        val adapter = MemoAdapter(requireContext(), memoViewModel)
+        val adapter = WishListAdapter(requireContext(), memoViewModel)
         val serialNum = 0 //메모 일련번호
 
 
@@ -63,15 +64,25 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
         binding.btnCancelWishlist.setOnClickListener {
             this.dismiss()
         }
-        binding.todoListView.setOnClickListener {
-            binding.todoListView.adapter
-            addDialogFragment.content = adapter.title
-            Log.d(ContentValues.TAG, "되는거겟지")
-            this.dismiss()
+
+        adapter.itemClick = object : WishListAdapter.ItemClick{
+            override fun onClick(view: View, position: Int, list: ArrayList<Memo>) {
+                addDialogFragment.content = adapter.title
+            }
         }
+
+//        binding.todoListView.setOnClickListener {
+
+//
+////            binding.todoListView.adapter
+//            addDialogFragment.content =
+//            Log.d(ContentValues.TAG, "되는거겟지")
+//            this.dismiss()
+//        }
 //        binding.todoListView.setOnClickListener {
 //            adapter.list.get("title")
 //        }
     }
 
 }
+
