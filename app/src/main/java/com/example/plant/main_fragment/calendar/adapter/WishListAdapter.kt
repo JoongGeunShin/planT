@@ -18,6 +18,7 @@ import com.example.plant.R
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.ui.calendar.AddDialogFragment
+import com.example.plant.main_fragment.calendar.ui.calendar.AddWishlistFragment
 import com.example.plant.main_fragment.calendar.ui.memo.ItemTouchHelperListener
 import com.example.plant.main_fragment.calendar.ui.memo.MemoModifyFragment
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
@@ -29,10 +30,9 @@ class WishListAdapter(
     val context: Context,
     val viewModel: MemoViewModel
 ) : RecyclerView.Adapter<WishListAdapter.ViewHolder>(){
-
-    lateinit var title:String
-    lateinit var category:String
-    lateinit var roadaddress:String
+    lateinit var title: String
+    lateinit var category: String
+    lateinit var roadaddress: String
 
     var list = ArrayList<Memo>()
     private lateinit var binding: MemoItemBinding
@@ -41,11 +41,11 @@ class WishListAdapter(
         fun onClick(view: View, position: Int, list: ArrayList<Memo>)
     }
 
-    var itemClick: WishListAdapter.ItemClick? = null
+    private var itemClick: WishListAdapter.ItemClick? = null
 
-//    fun setItemClick(itemClick: ItemClick){
-//        this.itemClick = itemClick
-//    }
+    fun setItemClick(itemClick: ItemClick){
+        this.itemClick = itemClick
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishListAdapter.ViewHolder {
         val inflater = LayoutInflater.from(context)
@@ -54,14 +54,9 @@ class WishListAdapter(
     }
 
     override fun onBindViewHolder(holder: WishListAdapter.ViewHolder, position: Int) {
+        holder.OnBind(list[position])
         Log.d(ContentValues.TAG, "WishListAdapter 호출됨")
-//        if (itemClick != null) {
-//            binding.completionBox.setOnClickListener { v ->
-//                itemClick?.onClick(v, position, list)
-//                Log.d(ContentValues.TAG, title)
-//            }
-//            Log.d(ContentValues.TAG, itemClick.toString())
-//        }
+
     }
 
     override fun getItemCount(): Int = list.size
@@ -84,6 +79,13 @@ class WishListAdapter(
                 title = item.title
                 category = item.category
                 roadaddress = item.roadaddress
+//                itemClick?.onClick(itemView, position, list)
+                // 바꿔야할 부분
+                val dialog = AddDialogFragment().apply{
+                    content = list[position].title
+                    serialNum = list[position].serialNum
+                }
+                viewModel.getTitle(list[position].serialNum)
             }
 
         }

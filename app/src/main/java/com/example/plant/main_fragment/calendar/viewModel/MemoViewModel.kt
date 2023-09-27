@@ -15,6 +15,9 @@ class MemoViewModel(
 
     fun getAllMemo(): LiveData<List<Memo>> = mDao.getAllMemo()
 
+    fun getTitle(serialNum: Int){
+        mDao.getTitle(serialNum)
+    }
     fun addMemo(item: Memo) {
         mDao.addMemo(item)
     }

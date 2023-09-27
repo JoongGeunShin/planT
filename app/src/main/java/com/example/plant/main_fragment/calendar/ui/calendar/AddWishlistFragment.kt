@@ -27,10 +27,9 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
     //바꿔야함
     private val binding by viewBinding(AddWishlistDialogBinding::bind)
     private val memoViewModel: MemoViewModel by viewModel()
-    private lateinit var addDialogFragment: AddDialogFragment
+    var serialNum : Int = 0 //메모 일련번호
+    var title: String = "" // 메모 제목
 
-
-    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,9 +47,6 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
         val adapter = WishListAdapter(requireContext(), memoViewModel)
         val serialNum = 0 //메모 일련번호
 
-
-        binding.todayDate.text = "장바구니"
-
         //모든 메모 가져오기
         memoViewModel.getAllMemo().observe(viewLifecycleOwner, Observer { list ->
             adapter.removeAll()
@@ -65,23 +61,23 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
             this.dismiss()
         }
 
-        adapter.itemClick = object : WishListAdapter.ItemClick{
-            override fun onClick(view: View, position: Int, list: ArrayList<Memo>) {
-                addDialogFragment.content = adapter.title
-            }
-        }
-
-//        binding.todoListView.setOnClickListener {
-
+        // wishlist 카드 클릭 이벤트
+//        adapter.setItemClick(object : WishListAdapter.ItemClick{
+//            override fun onClick(view: View, position: Int, list: ArrayList<Memo>) {
+////                addDialogFragment.content = adapter.title
+////                addWishlistFragment.dismiss()
 //
-////            binding.todoListView.adapter
-//            addDialogFragment.content =
-//            Log.d(ContentValues.TAG, "되는거겟지")
+//
+//
+//            }
+//        })
+//        binding.todoListView.setOnClickListener{
+//            addDialogFragment.content = adapter.title
 //            this.dismiss()
 //        }
-//        binding.todoListView.setOnClickListener {
-//            adapter.list.get("title")
-//        }
+
+
+
     }
 
 }

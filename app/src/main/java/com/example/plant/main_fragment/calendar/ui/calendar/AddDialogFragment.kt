@@ -17,9 +17,11 @@ import com.example.plant.main_fragment.calendar.model.Event
 import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
+import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import com.example.plant.main_fragment.calendar.viewModel.ScheduleViewModel
 import com.shashank.sony.fancytoastlib.FancyToast
 import io.github.muddz.styleabletoast.StyleableToast
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -34,14 +36,13 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     private val dateSaveModule: DateSaveModule by inject()
     private val scheduleViewModel: ScheduleViewModel by viewModel()
     private val eventViewModel: EventViewModel by viewModel()
+    private val viewModel: MemoViewModel by viewModel()
 
 
     // 알람 데이터
     private lateinit var selectedDate: String // 선택된 날짜
-    private var serialNum = 0 // 일련번호
-    private var importance = 3 // 일정 중요도 (기본값 : 3 (어떤 항목도 선택되지 않았을 때) )
-
-    lateinit var content: String
+    var serialNum = 0 // 일련번호
+    var content: String = "" //메모내용
 
 
     override fun onCreateView(
@@ -55,6 +56,8 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //여기에 content 연결
 
         binding.saveScheduleBtn.setOnClickListener(this)
         binding.cancelDialogBtn.setOnClickListener(this)

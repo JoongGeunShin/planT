@@ -28,8 +28,6 @@ class MemoAdapter(
     var list = ArrayList<Memo>()
     private lateinit var binding: MemoItemBinding
 
-    lateinit var title: String
-
     interface ItemClick {
         fun onClick(view: View, position: Int, list: ArrayList<Memo>)
 
@@ -52,7 +50,7 @@ class MemoAdapter(
         if (itemClick != null) {
             binding.completionBox.setOnClickListener { v ->
                 itemClick?.onClick(v, position, list)
-                Log.d(ContentValues.TAG, title)
+
             }
             Log.d(ContentValues.TAG, itemClick.toString())
         }

@@ -8,7 +8,7 @@ import com.example.plant.main_fragment.calendar.model.Schedule
 
 @Database(
     entities = [Memo::class, Schedule::class, Event::class ],
-    version = 15,
+    version = 16,
     exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract val memoDao : MemoDao
