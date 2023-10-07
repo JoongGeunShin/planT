@@ -1,19 +1,28 @@
 package com.example.plant.main_fragment.calendar.ui.calendar
 
+import android.content.ContentValues
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.liveData
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
 import com.example.plant.Importance
 import com.example.plant.R
 import com.example.plant.databinding.AddScheduleDialogBinding
 import com.example.plant.databinding.ModifyMemoDialogBinding
+import com.example.plant.main_fragment.calendar.adapter.WishListAdapter
 import com.example.plant.main_fragment.calendar.model.Event
+import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
@@ -39,10 +48,15 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     private val viewModel: MemoViewModel by viewModel()
 
 
+    lateinit var addWishlistFragment: AddWishlistFragment
+
     // 알람 데이터
     private lateinit var selectedDate: String // 선택된 날짜
     var serialNum = 0 // 일련번호
     var content: String = "" //메모내용
+    var livetitle: MutableLiveData<String> = MutableLiveData<String>().apply{
+        value=""
+    }
 
 
     override fun onCreateView(
@@ -57,7 +71,12 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //여기에 content 연결
+        //여기만 바꾸면 됨
+        livetitle.observe(viewLifecycleOwner, Observer {
+            binding.tvItemTitle.setText(livetitle.value)
+            Log.d(ContentValues.TAG, "livetitle실시간: ${livetitle.value}")
+        })
+
 
         binding.saveScheduleBtn.setOnClickListener(this)
         binding.cancelDialogBtn.setOnClickListener(this)
@@ -94,7 +113,6 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
         }
         //장바구니 버튼 2023-09-23-신중근
         binding.btnTogoWishlist.setOnClickListener(this)
-
 
 
     }
