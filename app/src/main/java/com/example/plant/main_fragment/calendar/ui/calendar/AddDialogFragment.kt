@@ -1,34 +1,40 @@
 package com.example.plant.main_fragment.calendar.ui.calendar
 
+import android.content.ContentValues
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
-import com.example.plant.Importance
 import com.example.plant.R
 import com.example.plant.databinding.AddScheduleDialogBinding
-import com.example.plant.databinding.ModifyMemoDialogBinding
 import com.example.plant.main_fragment.calendar.model.Event
 import com.example.plant.main_fragment.calendar.model.Schedule
-import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
+import com.example.plant.main_fragment.calendar.viewModel.DialogViewModel
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import com.example.plant.main_fragment.calendar.viewModel.ScheduleViewModel
 import com.shashank.sony.fancytoastlib.FancyToast
 import io.github.muddz.styleabletoast.StyleableToast
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.time.toDuration
 
 class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다이얼로그
 
@@ -37,13 +43,11 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     private val scheduleViewModel: ScheduleViewModel by viewModel()
     private val eventViewModel: EventViewModel by viewModel()
     private val viewModel: MemoViewModel by viewModel()
-
-
+    private val dialogViewModel: DialogViewModel by activityViewModels()
+    private var content = "내용 입력"
     // 알람 데이터
     private lateinit var selectedDate: String // 선택된 날짜
     var serialNum = 0 // 일련번호
-    var content: String = "" //메모내용
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,13 +55,12 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
         savedInstanceState: Bundle?
     ): View {
         isCancelable = false
+
         return inflater.inflate(R.layout.add_schedule_dialog, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //여기에 content 연결
 
         binding.saveScheduleBtn.setOnClickListener(this)
         binding.cancelDialogBtn.setOnClickListener(this)
@@ -94,9 +97,11 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
         }
         //장바구니 버튼 2023-09-23-신중근
         binding.btnTogoWishlist.setOnClickListener(this)
-
-
-
+        dialogViewModel.updateText("")
+        dialogViewModel.getData().observe(viewLifecycleOwner, Observer {
+//            Log.d(ContentValues.TAG,it.toString())
+            binding.tvItemTitle.setText(it.toString())
+        })
     }
 
     override fun onClick(v: View?) {
@@ -143,7 +148,8 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
 
             R.id.btn_togo_wishlist -> { // open 장바구니
                 val wishlist = AddWishlistFragment()
-                wishlist.show(parentFragmentManager, "AddWishlistDialog")
+                childFragmentManager.beginTransaction()
+                wishlist.show(childFragmentManager, "AddWishlistDialog")
             }
         }
     }

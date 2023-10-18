@@ -1,30 +1,19 @@
 package com.example.plant.main_fragment.calendar.adapter
 
-import android.content.ContentValues
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.TextView
 import android.widget.Toast
-import androidx.cardview.widget.CardView
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.plant.R
-//import androidx.room.processor.Context
 import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.ui.calendar.AddDialogFragment
 import com.example.plant.main_fragment.calendar.ui.calendar.AddWishlistFragment
-import com.example.plant.main_fragment.calendar.ui.memo.ItemTouchHelperListener
-import com.example.plant.main_fragment.calendar.ui.memo.MemoModifyFragment
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class WishListAdapter(
     val context: Context,
@@ -40,23 +29,28 @@ class WishListAdapter(
     interface ItemClick {
         fun onClick(view: View, position: Int, list: ArrayList<Memo>)
     }
+    var itemClick: WishListAdapter.ItemClick? = null
 
-    private var itemClick: WishListAdapter.ItemClick? = null
-
-    fun setItemClick(itemClick: ItemClick){
+    fun setItemClick(itemClick: ItemClick, function: () -> Unit){
         this.itemClick = itemClick
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishListAdapter.ViewHolder {
+
         val inflater = LayoutInflater.from(context)
         binding = MemoItemBinding.inflate(inflater, parent, false)
         return ViewHolder(binding.root)
+
     }
 
     override fun onBindViewHolder(holder: WishListAdapter.ViewHolder, position: Int) {
         holder.OnBind(list[position])
-        Log.d(ContentValues.TAG, "WishListAdapter 호출됨")
-
+//        Log.d(ContentValues.TAG, "WishListAdapter 호출됨")
+        if (itemClick!=null){
+            holder.itemView.setOnClickListener{ v ->
+                itemClick?.onClick(v, position, list)
+            }
+        }
     }
 
     override fun getItemCount(): Int = list.size
@@ -69,23 +63,33 @@ class WishListAdapter(
 
         fun OnBind(item: Memo) {
             binding.memo = item
-//            binding.tvItemTitle.text = item.title
-//            binding.tvItemCategory.text = item.category
-//            binding.tvItemRoadaddress.text = item.roadaddress
+            binding.tvItemTitle.text = item.title
+            binding.tvItemCategory.text = item.category
+            binding.tvItemRoadaddress.text = item.roadaddress
 
             binding.itemCard.setOnClickListener{ View ->
                 Toast.makeText(context, "카드뷰 클릭됨", Toast.LENGTH_SHORT).show()
-                Log.e("check", "카드뷰 클릭")
                 title = item.title
                 category = item.category
                 roadaddress = item.roadaddress
-//                itemClick?.onClick(itemView, position, list)
+
+
                 // 바꿔야할 부분
-                val dialog = AddDialogFragment().apply{
-                    content = list[position].title
-                    serialNum = list[position].serialNum
-                }
-                viewModel.getTitle(list[position].serialNum)
+
+//                val dialog = AddDialogFragment().apply{
+//                    content = list[position].title
+//                    serialNum = list[position].serialNum
+//                }
+//                val fragmentTransaction = dialog.childFragmentManager.beginTransaction()
+//                fragmentTransaction.remove(AddDialogFragment())
+//                fragmentTransaction.commit()
+            //                val fragmentTransaction = dialog.childFragmentManager.beginTransaction()
+//                fragmentTransaction.remove(AddWishlistFragment())
+//                fragmentTransaction.commit()
+//                activity?.let {
+//                    dialog.show(it.supportFragmentManager, "MenuDialogFragment")
+//                }
+//                viewModel.getTitle(list[position].serialNum)
             }
 
         }
