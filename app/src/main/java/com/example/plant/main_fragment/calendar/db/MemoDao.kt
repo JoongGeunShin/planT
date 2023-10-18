@@ -18,9 +18,6 @@ interface MemoDao { // 메모 테이블 관련
     @Query("SELECT * FROM memo")
     fun getAllMemo() : LiveData<List<Memo>>
 
-    @Query("SELECT title FROM memo WHERE serialNum = :serialNum")
-    fun getTitle(serialNum: Int) : List<String>
-
     @Query("UPDATE memo SET completion = :completion where serialNum = :serialNum")
     fun changeCompletion(completion: Boolean, serialNum: Int)
 

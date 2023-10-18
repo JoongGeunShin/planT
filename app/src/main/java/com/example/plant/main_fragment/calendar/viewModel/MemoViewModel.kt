@@ -1,6 +1,7 @@
 package com.example.plant.main_fragment.calendar.viewModel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.plant.main_fragment.calendar.db.MemoDao
@@ -15,9 +16,6 @@ class MemoViewModel(
 
     fun getAllMemo(): LiveData<List<Memo>> = mDao.getAllMemo()
 
-    fun getTitle(serialNum: Int){
-        mDao.getTitle(serialNum)
-    }
     fun addMemo(item: Memo) {
         mDao.addMemo(item)
     }

@@ -9,9 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.liveData
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -25,6 +27,7 @@ import com.example.plant.main_fragment.calendar.model.Event
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
+import com.example.plant.main_fragment.calendar.viewModel.DialogViewModel
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import com.example.plant.main_fragment.calendar.viewModel.ScheduleViewModel
@@ -32,6 +35,7 @@ import com.shashank.sony.fancytoastlib.FancyToast
 import io.github.muddz.styleabletoast.StyleableToast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -46,17 +50,15 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
     private val scheduleViewModel: ScheduleViewModel by viewModel()
     private val eventViewModel: EventViewModel by viewModel()
     private val viewModel: MemoViewModel by viewModel()
-
-
-    lateinit var addWishlistFragment: AddWishlistFragment
+    private val dialogViewmodel: DialogViewModel by activityViewModels()
 
     // 알람 데이터
     private lateinit var selectedDate: String // 선택된 날짜
     var serialNum = 0 // 일련번호
     var content: String = "" //메모내용
-    var livetitle: MutableLiveData<String> = MutableLiveData<String>().apply{
-        value=""
-    }
+//    var livetitle: MutableLiveData<String> = MutableLiveData<String>().apply {
+//        value = ""
+//    }
 
 
     override fun onCreateView(
@@ -72,11 +74,15 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
         super.onViewCreated(view, savedInstanceState)
 
         //여기만 바꾸면 됨
-        livetitle.observe(viewLifecycleOwner, Observer {
-            binding.tvItemTitle.setText(livetitle.value)
-            Log.d(ContentValues.TAG, "livetitle실시간: ${livetitle.value}")
-        })
+//        viewModel.livetitle.value = ""
+//        viewModel.getData().observe(viewLifecycleOwner, Observer{
+//            binding.tvItemTitle.setText(it)
+//            Log.d(ContentValues.TAG, "livetitle실시간: ${viewModel.livetitle.value}")
+//        })
 
+        dialogViewmodel.inputText.observe(viewLifecycleOwner, Observer {
+            binding.tvItemTitle.setText(it.toString())
+        })
 
         binding.saveScheduleBtn.setOnClickListener(this)
         binding.cancelDialogBtn.setOnClickListener(this)
@@ -165,4 +171,5 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
             }
         }
     }
+
 }

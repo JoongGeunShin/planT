@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.get
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
@@ -20,7 +22,9 @@ import com.example.plant.databinding.MemoItemBinding
 import com.example.plant.main_fragment.calendar.adapter.MemoAdapter
 import com.example.plant.main_fragment.calendar.adapter.WishListAdapter
 import com.example.plant.main_fragment.calendar.model.Memo
+import com.example.plant.main_fragment.calendar.viewModel.DialogViewModel
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -29,10 +33,11 @@ class AddWishlistFragment : DialogFragment() { // 장바구니 추가 다이어�
     //바꿔야함
     private val binding by viewBinding(AddWishlistDialogBinding::bind)
     private val memoViewModel: MemoViewModel by viewModel()
+    private val dialogViewmodel: DialogViewModel by activityViewModels()
     var serialNum: Int = 0 //메모 일련번호
     var titlename: String = ""
 
-    lateinit var addDialogFragment: AddDialogFragment
+    //    lateinit var addDialogFragment: AddDialogFragment
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,13 +59,11 @@ class AddWishlistFragment : DialogFragment() { // 장바구니 추가 다이어�
         adapter.itemClick = object : WishListAdapter.ItemClick {
             override fun onClick(view: View, position: Int, list: ArrayList<Memo>) {
                 titlename = list[position].title
-                //adddialog의 livetitle 라이브 데이터에 titlename 넣어줌
-                AddDialogFragment().apply{
-                    livetitle.value = titlename
-                    //value에 들어오는것 까지 확인했음.
-                    Log.d(ContentValues.TAG, "${livetitle.value}")
-                }
-                Toast.makeText(requireContext(),titlename,Toast.LENGTH_SHORT).show()
+                //memoViewModel의 livetitle 라이브 데이터에 titlename 넣어줌
+//                memoViewModel.livetitle.value = titlename
+                dialogViewmodel.inputText.value=(titlename)
+//                Log.d(ContentValues.TAG, "${dialogViewmodel.getData().value}")
+                Toast.makeText(requireContext(), titlename, Toast.LENGTH_SHORT).show()
                 dismiss()
             }
         }

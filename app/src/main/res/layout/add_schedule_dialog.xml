@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="schedule"
-            type="com.example.plant.main_fragment.calendar.model.Schedule" />
+            name="memoViewModel"
+            type="com.example.plant.main_fragment.calendar.viewModel.MemoViewModel" />
     </data>
 
 
