@@ -5,13 +5,11 @@ import androidx.lifecycle.ViewModel
 
 class DialogViewModel : ViewModel() {
 
-    var inputText: MutableLiveData<String> = MutableLiveData<String>().apply{
-        value=""
-    }
+    private var inputText: MutableLiveData<String> = MutableLiveData()
 
-//    fun getData(): MutableLiveData<String> = inputText
-//
-//    fun updateText(input: String) {
-//        inputText.value = input
-//    }
+    fun getData(): MutableLiveData<String> = inputText
+
+    fun updateText(input: String) {
+        inputText.value = input
+    }
 }

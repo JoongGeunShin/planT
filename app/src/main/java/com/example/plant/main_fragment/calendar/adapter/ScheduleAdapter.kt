@@ -1,5 +1,7 @@
 package com.example.plant.main_fragment.calendar.adapter
 
+import android.content.ContentValues
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +32,7 @@ class ScheduleAdapter : RecyclerView.Adapter<ScheduleAdapter.Holder>() {
                 itemClick?.onClick(v, position, list)
             }
         }
+        Log.d(ContentValues.TAG, "ScheduleAdapter 호출됨")
     }
 
     override fun getItemCount(): Int = list.size

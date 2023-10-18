@@ -31,9 +31,9 @@ class WishListAdapter(
     }
     var itemClick: WishListAdapter.ItemClick? = null
 
-//    fun setItemClick(itemClick: ItemClick, function: () -> Unit){
-//        this.itemClick = itemClick
-//    }
+    fun setItemClick(itemClick: ItemClick, function: () -> Unit){
+        this.itemClick = itemClick
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishListAdapter.ViewHolder {
 
@@ -83,7 +83,7 @@ class WishListAdapter(
 //                val fragmentTransaction = dialog.childFragmentManager.beginTransaction()
 //                fragmentTransaction.remove(AddDialogFragment())
 //                fragmentTransaction.commit()
-                //                val fragmentTransaction = dialog.childFragmentManager.beginTransaction()
+            //                val fragmentTransaction = dialog.childFragmentManager.beginTransaction()
 //                fragmentTransaction.remove(AddWishlistFragment())
 //                fragmentTransaction.commit()
 //                activity?.let {
