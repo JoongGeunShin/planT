@@ -97,9 +97,9 @@ class AddDialogFragment : DialogFragment(), View.OnClickListener { // 수정 다
         }
         //장바구니 버튼 2023-09-23-신중근
         binding.btnTogoWishlist.setOnClickListener(this)
-        dialogViewModel.updateText("")
+
+//        dialogViewModel.updateText("")
         dialogViewModel.getData().observe(viewLifecycleOwner, Observer {
-//            Log.d(ContentValues.TAG,it.toString())
             binding.tvItemTitle.setText(it.toString())
         })
     }

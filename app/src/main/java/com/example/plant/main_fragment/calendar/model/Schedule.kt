@@ -12,5 +12,6 @@ data class Schedule(
     var start_hour : String,
     var start_minute : String,
     var end_hour : String,
-    var end_minute : String
+    var end_minute : String,
+    var start_end_time :String = "시작시간: ${start_hour}:${start_minute} ~ 종료시간: ${end_hour}:$end_minute"
 )
