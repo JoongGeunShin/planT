@@ -1,20 +1,13 @@
 package com.example.plant.main_fragment.calendar.ui.calendar
 
-import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.Context
-import android.content.Context.MODE_NO_LOCALIZED_COLLATORS
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.DateSaveModule
 import com.example.plant.MainActivity
@@ -24,14 +17,10 @@ import com.example.plant.main_fragment.calendar.adapter.ScheduleAdapter
 import com.example.plant.main_fragment.calendar.model.Schedule
 import com.example.plant.main_fragment.calendar.viewModel.EventViewModel
 import com.example.plant.main_fragment.calendar.viewModel.ScheduleViewModel
-import com.google.android.play.core.integrity.v
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.util.Collections
 
 class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar), View.OnClickListener {
@@ -90,19 +79,15 @@ class CalendarFragment : Fragment(R.layout.fragment_bottomnvi_calendar), View.On
                     val year = Integer.parseInt(eventDate[0])
                     val month = Integer.parseInt(eventDate[1])
                     val day = Integer.parseInt(eventDate[2])
-                    binding.calendarView
-                        .addDecorator(
-                            EventDecorator(
-                                Color.parseColor("#0E406B"),
-                                Collections.singleton(
-                                    CalendarDay.from(
-                                        year,
-                                        month - 1,
-                                        day
-                                    )
+                    binding.calendarView.addDecorator(
+                        EventDecorator(
+                            Color.parseColor("#0E406B"), Collections.singleton(
+                                CalendarDay.from(
+                                    year, month - 1, day
                                 )
                             )
                         )
+                    )
                 }
             })
 

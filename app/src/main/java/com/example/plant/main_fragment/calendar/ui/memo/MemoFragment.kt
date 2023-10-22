@@ -1,32 +1,23 @@
 package com.example.plant.main_fragment.calendar.ui.memo
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.plant.R
-import com.example.plant.databinding.FragmentBottomnviCalendarBinding
 import com.example.plant.databinding.FragmentBottomnviMemoBinding
 import com.example.plant.main_fragment.calendar.adapter.MemoAdapter
 import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
-import com.prolificinteractive.materialcalendarview.CalendarDay
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MemoFragment : Fragment(R.layout.fragment_bottomnvi_memo) {
 
-    private val binding by viewBinding(FragmentBottomnviMemoBinding::bind,
+    private val binding by viewBinding(
+        FragmentBottomnviMemoBinding::bind,
         onViewDestroyed = { binding ->
             binding.todoListView.adapter = null
         })

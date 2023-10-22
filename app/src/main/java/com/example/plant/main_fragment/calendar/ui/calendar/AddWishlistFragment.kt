@@ -19,21 +19,19 @@ import com.example.plant.main_fragment.calendar.viewModel.DialogViewModel
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로그
+class AddWishlistFragment : DialogFragment() { // 장바구니 추가 다이어로그
 
     //바꿔야함
     private val binding by viewBinding(AddWishlistDialogBinding::bind)
     private val memoViewModel: MemoViewModel by viewModel()
     private val dialogViewModel: DialogViewModel by activityViewModels()
 
-    var serialNum : Int = 0 //메모 일련번호
+    var serialNum: Int = 0 //메모 일련번호
 
     lateinit var title: String
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         isCancelable = false
         return inflater.inflate(R.layout.add_wishlist_dialog, container, false)
@@ -54,13 +52,14 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
             binding.todoListView.layoutManager = LinearLayoutManager(requireContext())
         })
 
-        adapter.itemClick = object : WishListAdapter.ItemClick{
+        adapter.itemClick = object : WishListAdapter.ItemClick {
             override fun onClick(view: View, position: Int, list: ArrayList<Memo>) {
 
                 val fragmentTransaction = parentFragmentManager.beginTransaction()
-                dialogViewModel.updateText(list[position].title)
+                var titleAndCategory = "(${list[position].category}) ${list[position].title}"
+                dialogViewModel.updateText(titleAndCategory)
                 dialogViewModel.getData().observe(viewLifecycleOwner, Observer {
-                    Log.d(ContentValues.TAG,it.toString())
+                    Log.d(ContentValues.TAG, it.toString())
                 })
 
                 Log.d(ContentValues.TAG, list[position].title)
@@ -69,7 +68,6 @@ class AddWishlistFragment: DialogFragment(){ // 장바구니 추가 다이어로
                 dismiss()
             }
         }
-
 
         binding.btnCancelWishlist.setOnClickListener {
             this.dismiss()

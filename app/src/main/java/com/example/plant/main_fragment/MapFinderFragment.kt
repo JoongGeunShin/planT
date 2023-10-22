@@ -4,11 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.MainActivity
@@ -24,9 +22,9 @@ class MapFinderFragment : Fragment(), FragmentListener {
 
     //출발지, 목적지 editText, rv
     lateinit var edtStartPoint: EditText
-    lateinit var rvstart:RecyclerView
+    lateinit var rvstart: RecyclerView
     lateinit var edtGoalPoint: EditText
-    lateinit var rvgoal:RecyclerView
+    lateinit var rvgoal: RecyclerView
 
     //리사이클러뷰
     private val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
@@ -34,7 +32,6 @@ class MapFinderFragment : Fragment(), FragmentListener {
     var recyclerViewAdapter: RecyclerViewAdapter = RecyclerViewAdapter(mainActivity)
     val mdatas = mutableListOf<RecyclerViewData>()
     lateinit var text: String
-
 
 
     override fun onAttach(context: Context) {
@@ -63,7 +60,10 @@ class MapFinderFragment : Fragment(), FragmentListener {
             (parentFragment as HomeFragment).hideMapFinder(true)
         }
         binding.btnMapFinder.setOnClickListener {
-            (parentFragment as HomeFragment).pathFinder(mainActivity.startCoord, mainActivity.goalCoord)
+            (parentFragment as HomeFragment).pathFinder(
+                mainActivity.startCoord,
+                mainActivity.goalCoord
+            )
             (parentFragment as HomeFragment).hideMapFinder(true)
             (parentFragment as HomeFragment).hideCameraAct(false)
         }
@@ -115,8 +115,6 @@ class MapFinderFragment : Fragment(), FragmentListener {
 //        tvm.text = data
 
     }
-
-
 
 
 }

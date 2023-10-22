@@ -10,13 +10,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plant.HOTPLACE.HOTPLACEDTO
@@ -34,17 +31,16 @@ import com.example.plant.main_fragment.calendar.model.Memo
 import com.example.plant.main_fragment.calendar.viewModel.MemoViewModel
 import com.example.plant.pathfinder.NaverAPI
 import com.example.plant.pathfinder.ResultPath
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraAnimation
 import com.naver.maps.map.CameraUpdate
-import com.naver.maps.map.overlay.CircleOverlay
-import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.CircleOverlay
 import com.naver.maps.map.overlay.InfoWindow
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.Overlay
@@ -72,7 +68,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     // 장바구니
     val serialNum = 0 // 메모 일련번호
-    private val memoViewModel : MemoViewModel by viewModel()
+    private val memoViewModel: MemoViewModel by viewModel()
 
     // Geocode
     val GEOCODE_CLIENT_ID = "u04wstprb6"
@@ -117,7 +113,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     // 장바구니
     private var isFabOpen = false
     private var jangBaguniItemCount = 0
-    private val jangBaguniItem : MutableList<HashMap<String,Any>> = mutableListOf()
+    private val jangBaguniItem: MutableList<HashMap<String, Any>> = mutableListOf()
     private var livedataOfjangBaguniItemCount = MutableLiveData<Int>()
 
     override fun onAttach(context: Context) {
@@ -201,36 +197,40 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
         // 위치에서 탐색하기 클릭시 뜨게 하기
         binding.btnFindMapItems.setOnClickListener {
-            Toast.makeText(mainActivity,"위치에서 탐색하기 버튼 click",Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity, "위치에서 탐색하기 버튼 click", Toast.LENGTH_SHORT).show()
 
-            val latlng_string = "%.9f".format(naverMap.cameraPosition.target.longitude) + "," + "%.9f".format(naverMap.cameraPosition.target.latitude)
-            Log.d(ContentValues.TAG,"1st... 위치에서 탐색하기 탭 클릭 $latlng_string}")
+            val latlng_string =
+                "%.9f".format(naverMap.cameraPosition.target.longitude) + "," + "%.9f".format(
+                    naverMap.cameraPosition.target.latitude
+                )
+            Log.d(ContentValues.TAG, "1st... 위치에서 탐색하기 탭 클릭 $latlng_string}")
             val foodString = foodCategoryString + foodTypeString
-            if(foodString.isEmpty()){
-                Toast.makeText(mainActivity,"상단의 음식 종류 혹은 가게 종류 중 최소 한가지를 선택해 주세요",Toast.LENGTH_SHORT).show()
-            }else{
+            if (foodString.isEmpty()) {
+                Toast.makeText(
+                    mainActivity,
+                    "상단의 음식 종류 혹은 가게 종류 중 최소 한가지를 선택해 주세요",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 ReverseGeocode(latlng_string)
             }
         }
-        binding.switchFoodType.setOnCheckedChangeListener{
-                p0, isChecked ->
-            if(isChecked) {
+        binding.switchFoodType.setOnCheckedChangeListener { p0, isChecked ->
+            if (isChecked) {
                 binding.radioGrpFoodType.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.radioGrpFoodType.visibility = View.GONE
             }
         }
-        binding.switchFoodCategory.setOnCheckedChangeListener{
-                p0, isChecked ->
-            if(isChecked) {
+        binding.switchFoodCategory.setOnCheckedChangeListener { p0, isChecked ->
+            if (isChecked) {
                 binding.radioGrpCategory.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.radioGrpCategory.visibility = View.GONE
             }
         }
-        binding.radioGrpFoodType.setOnCheckedChangeListener{
-                group, checkedId ->
-            when(checkedId){
+        binding.radioGrpFoodType.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
                 R.id.radioBtn_pizza -> foodTypeString = "피자"
                 R.id.radioBtn_chicken -> foodTypeString = "치킨"
                 R.id.radioBtn_noodle -> foodTypeString = "면"
@@ -241,11 +241,11 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
             binding.radioGrpFoodType.visibility = View.INVISIBLE
             binding.switchFoodType.isChecked = false
-            Toast.makeText(mainActivity,foodCategoryString + foodTypeString,Toast.LENGTH_SHORT).show()
+            Toast.makeText(mainActivity, foodCategoryString + foodTypeString, Toast.LENGTH_SHORT)
+                .show()
         }
-        binding.radioGrpCategory.setOnCheckedChangeListener{
-                group, checkedId ->
-            when(checkedId){
+        binding.radioGrpCategory.setOnCheckedChangeListener { group, checkedId ->
+            when (checkedId) {
                 R.id.radioBtn_food -> foodCategoryString = "음식점"
                 R.id.radioBtn_cafe -> foodCategoryString = "카페"
                 R.id.radioBtn_pub -> foodCategoryString = "펍"
@@ -259,79 +259,98 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             toggleFab()
         }
         binding.fabJangbaguniItem1.setOnClickListener {
-            if(1 <= jangBaguniItemCount){
+            if (1 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[0].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[0]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[0]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
         binding.fabJangbaguniItem2.setOnClickListener {
-            if(2 <= jangBaguniItemCount){
+            if (2 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[1].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[1]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[1]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
         binding.fabJangbaguniItem3.setOnClickListener {
-            if(3 <= jangBaguniItemCount){
+            if (3 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[2].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[2]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[2]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
         binding.fabJangbaguniItem4.setOnClickListener {
-            if(4 <= jangBaguniItemCount){
+            if (4 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[3].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[3]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[3]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
         binding.fabJangbaguniItem5.setOnClickListener {
-            if(5 <= jangBaguniItemCount){
+            if (5 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[4].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[4]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[4]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
         binding.fabJangbaguniItem6.setOnClickListener {
-            if(6 <= jangBaguniItemCount){
+            if (6 <= jangBaguniItemCount) {
                 val cameraUpdate =
                     CameraUpdate.scrollTo(jangBaguniItem[5].get("location") as LatLng)
                         .animate(CameraAnimation.Easing, 2000)
                 naverMap.moveCamera(cameraUpdate)
-                Toast.makeText(mainActivity, jangBaguniItem[5]["info"].toString(), Toast.LENGTH_SHORT).show()
-            }
-            else{
-                Toast.makeText(mainActivity,"장바구니에 담긴게 없습니다",Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mainActivity,
+                    jangBaguniItem[5]["info"].toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(mainActivity, "장바구니에 담긴게 없습니다", Toast.LENGTH_SHORT).show()
             }
         }
 
     }
+
     //    private var jangBaguniItemCount = 0
 //    private lateinit var jangBaguniItem : MutableList<HashMap<String,Any>>
     fun toggleFab() {
@@ -354,12 +373,18 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             ObjectAnimator.ofFloat(binding.fabJangbaguni, View.ROTATION, 45f, 0f).apply { start() }
             // 플로팅 액션 버튼 열기 - 닫혀있는 플로팅 버튼 꺼내는 애니메이션 세팅
         } else {
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem1, "translationY", -180f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem2, "translationY", -360f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem3, "translationY", -540f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem4, "translationX", -180f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem5, "translationX", -360f).apply { start() }
-            ObjectAnimator.ofFloat(binding.fabJangbaguniItem6, "translationX", -540f).apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem1, "translationY", -180f)
+                .apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem2, "translationY", -360f)
+                .apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem3, "translationY", -540f)
+                .apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem4, "translationX", -180f)
+                .apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem5, "translationX", -360f)
+                .apply { start() }
+            ObjectAnimator.ofFloat(binding.fabJangbaguniItem6, "translationX", -540f)
+                .apply { start() }
             binding.fabJangbaguniItem1.visibility = View.VISIBLE
             binding.fabJangbaguniItem2.visibility = View.VISIBLE
             binding.fabJangbaguniItem3.visibility = View.VISIBLE
@@ -373,24 +398,29 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     }
 
-    fun ReverseGeocode(address_x_y : String) {
+    fun ReverseGeocode(address_x_y: String) {
         var regionString = ""
         val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
 
         val ReverseGeocodeInterface = retrofit.create(ReverseGeocodeInterface::class.java)
         val call =
-            ReverseGeocodeInterface.getLocationByReverseGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY,address_x_y)
+            ReverseGeocodeInterface.getLocationByReverseGeocode(
+                GEOCODE_CLIENT_ID,
+                GEOCODE_SECRET_KEY,
+                address_x_y
+            )
 
         call.enqueue(object : Callback<ReverseGeocodeDTO> {
             override fun onResponse(
                 call: Call<ReverseGeocodeDTO>, response: Response<ReverseGeocodeDTO>
             ) {
                 response.body()?.results?.forEach {
-                    if(it.region.area1.name.isNotEmpty())
-                        regionString =  it.region.area1.name + " " + it.region.area2.name + " " + it.region.area3.name +
-                                " "  + it.region.area4.name
-                    Log.d(ContentValues.TAG,"reverse geocode를 통해 얻은 도로명 주소 = $regionString")
+                    if (it.region.area1.name.isNotEmpty())
+                        regionString =
+                            it.region.area1.name + " " + it.region.area2.name + " " + it.region.area3.name +
+                                    " " + it.region.area4.name
+                    Log.d(ContentValues.TAG, "reverse geocode를 통해 얻은 도로명 주소 = $regionString")
                     findHOTPLACE(regionString, foodCategoryString + foodTypeString) // 술집으로 테스트
                 }
             }
@@ -400,34 +430,50 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
     }
-    fun findHOTPLACE(placeAddress: String, placetype:String){
+
+    fun findHOTPLACE(placeAddress: String, placetype: String) {
         val retrofit = Retrofit.Builder()
             .baseUrl("https://openapi.naver.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val HOTPLACESearchInterface = retrofit.create(HOTPLACESearchInterface::class.java)
-        HOTPLACESearchInterface.getHOTPLACEByLocation(SEARCH_CLIENT_ID, SEARCH_SECRET_KEY, placeAddress + placetype)
+        HOTPLACESearchInterface.getHOTPLACEByLocation(
+            SEARCH_CLIENT_ID,
+            SEARCH_SECRET_KEY,
+            placeAddress + placetype
+        )
             .enqueue(object : Callback<HOTPLACEDTO> {
                 override fun onResponse(
                     call: Call<HOTPLACEDTO>,
                     response: Response<HOTPLACEDTO>
                 ) {
                     response.body()?.HOTPLACES?.forEach {
-                        Log.d(ContentValues.TAG,"3rd... Hotplace Finder 호출")
-                        HOTPLACEGeocoder(Html.fromHtml(it.title).toString(),it.category,it.description,it.roadAddress)
+                        Log.d(ContentValues.TAG, "3rd... Hotplace Finder 호출")
+                        HOTPLACEGeocoder(
+                            Html.fromHtml(it.title).toString(),
+                            it.category,
+                            it.description,
+                            it.roadAddress
+                        )
                     }
 
 
-
                 }
+
                 override fun onFailure(call: Call<HOTPLACEDTO>, t: Throwable) {
                     Log.d(ContentValues.TAG, "Connection ERROR")
                 }
             })
     }
-    fun HOTPLACEGeocoder(HOTPLACE_Title: String,HOTPLACE_Category: String,HOTPLACE_Description: String, HOTPLACE_RoadAddress:String){
-        var HOTPLACELatLng : LatLng
+
+    fun HOTPLACEGeocoder(
+        HOTPLACE_Title: String,
+        HOTPLACE_Category: String,
+        HOTPLACE_Description: String,
+        HOTPLACE_RoadAddress: String
+    ) {
+        var HOTPLACELatLng: LatLng
         val HOTPLACE_Title = HOTPLACE_Title
         val HOTPLACE_Category = HOTPLACE_Category
         val HOTPLACE_Description = HOTPLACE_Description
@@ -437,7 +483,11 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
         val GeocodeInterface = retrofit.create(GeocodeInterface::class.java)
         val call =
-            GeocodeInterface.getLocationByGeocode(GEOCODE_CLIENT_ID, GEOCODE_SECRET_KEY, HOTPLACE_RoadAddress)
+            GeocodeInterface.getLocationByGeocode(
+                GEOCODE_CLIENT_ID,
+                GEOCODE_SECRET_KEY,
+                HOTPLACE_RoadAddress
+            )
         val HOTPLACEMarker = Marker()
         val infoWindow = InfoWindow()
         call.enqueue(object : Callback<GeocodeDTO> {
@@ -445,21 +495,24 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 call: Call<GeocodeDTO>, response: Response<GeocodeDTO>
             ) {
                 response.body()?.addresses?.forEach {
-                    Log.d(ContentValues.TAG,"4th.. HOTPLACEGeocoder 호출")
+                    Log.d(ContentValues.TAG, "4th.. HOTPLACEGeocoder 호출")
 
-                    HOTPLACELatLng = LatLng(it.y.toDouble(),it.x.toDouble())
+                    HOTPLACELatLng = LatLng(it.y.toDouble(), it.x.toDouble())
                     HOTPLACEMarker.position = HOTPLACELatLng
                     HOTPLACEMarker.map = naverMap
                     HOTPLACEMarker.icon = MarkerIcons.BLACK
                     HOTPLACEMarker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
                     HOTPLACEMarker.captionText = HOTPLACE_Title
 //                    HOTPLACEList.add(arrayOf(HOTPLACE_Title, HOTPLACE_Category, HOTPLACE_Description, it.x, it.y))
-                    Log.d(ContentValues.TAG, "제목 : $HOTPLACE_Title 설명 : $HOTPLACE_Description 카테고리 : $HOTPLACE_Category " +
-                            "도로명주소 : $HOTPLACE_RoadAddress 좌표 : $HOTPLACELatLng")
+                    Log.d(
+                        ContentValues.TAG,
+                        "제목 : $HOTPLACE_Title 설명 : $HOTPLACE_Description 카테고리 : $HOTPLACE_Category " +
+                                "도로명주소 : $HOTPLACE_RoadAddress 좌표 : $HOTPLACELatLng"
+                    )
 
                     infoWindow.adapter = object : InfoWindow.DefaultTextAdapter(mainActivity) {
                         override fun getText(infoWindow: InfoWindow): CharSequence {
-                            return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n"+
+                            return "제목: $HOTPLACE_Title\n설명: $HOTPLACE_Description\n카테고리: $HOTPLACE_Category\n" +
                                     "도로명주소: $HOTPLACE_RoadAddress"
                         }
                     }
@@ -482,14 +535,21 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 //    private lateinit var jangBaguniItem : MutableList<HashMap<String,Any>>
 
                         naverMap.setOnMapLongClickListener { pointF, latLng ->
-                            Log.d(ContentValues.TAG,latLng.toString())
-                            Log.d(ContentValues.TAG,"위치 : ${marker.position}")
+                            Log.d(ContentValues.TAG, latLng.toString())
+                            Log.d(ContentValues.TAG, "위치 : ${marker.position}")
                             jangBaguniItem.add(HashMap())
                             jangBaguniItem[jangBaguniItemCount].put("location", marker.position)
-                            jangBaguniItem[jangBaguniItemCount].put("info",infoWindow.open(marker).toString())
+                            jangBaguniItem[jangBaguniItemCount].put(
+                                "info",
+                                infoWindow.open(marker).toString()
+                            )
                             jangBaguniItemCount++
                             Log.d(ContentValues.TAG, "테스트세트스트세스${jangBaguniItem[0].toString()}")
-                            Toast.makeText(mainActivity,"$jangBaguniItemCount 번째 장바구니에 담겼습니다!",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                mainActivity,
+                                "$jangBaguniItemCount 번째 장바구니에 담겼습니다!",
+                                Toast.LENGTH_SHORT
+                            ).show()
 
                             //장바구니 추가
                             if (jangBaguniItem.isNotEmpty()) {
@@ -498,7 +558,15 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                                 val roadaddress = HOTPLACE_RoadAddress
                                 lifecycleScope.launch {
                                     withContext(Dispatchers.IO) {
-                                        memoViewModel.addMemo(Memo(serialNum, title, category, roadaddress, false ))
+                                        memoViewModel.addMemo(
+                                            Memo(
+                                                serialNum,
+                                                title,
+                                                category,
+                                                roadaddress,
+                                                false
+                                            )
+                                        )
                                     }
                                 }
                             }
@@ -514,6 +582,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
                 }
 
             }
+
             override fun onFailure(call: Call<GeocodeDTO>, t: Throwable) {
                 Log.d(ContentValues.TAG, "Connection ERROR")
             }
@@ -576,11 +645,13 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
     override fun onReceivedData(data: String) {
         // tvParent.text = data
     }
+
     // visible 설정
     fun hideMapFinder(state: Boolean) {
         if (state) binding.frameLayoutMapFinder.visibility =
             View.GONE else binding.frameLayoutMapFinder.visibility = View.VISIBLE
     }
+
     fun hideCameraAct(state: Boolean) {
         if (state) binding.btnFirstCamera.visibility =
             View.GONE else binding.btnFirstCamera.visibility = View.VISIBLE
@@ -589,6 +660,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         if (state) binding.btnPrevCamera.visibility =
             View.GONE else binding.btnPrevCamera.visibility = View.VISIBLE
     }
+
     lateinit var coord: Coord
     fun moveToSearchedLocation(x: Double, y: Double, type: String, boolean: Boolean) {
         coord = LatLng(y, x)
@@ -615,6 +687,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         marker.iconTintColor = Color.RED // 현재위치 마커 빨간색으로
         marker.captionText = "여기"
     }
+
     fun Geocode(address: String, type: String, boolean: Boolean) {
         val retrofit = Retrofit.Builder().baseUrl("https://naveropenapi.apigw.ntruss.com/")
             .addConverterFactory(GsonConverterFactory.create()).build()
@@ -645,6 +718,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
             }
         })
     }
+
     val path = PathOverlay()
     fun pathFinder(startCoord: Coord, goalCoord: Coord) {
         val retrofit =
@@ -716,6 +790,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         })
 
     }
+
     //카메라 이동 (이전, 처음, 다음)
     fun firstCamera() {
         //여기 바꿔야함
@@ -725,12 +800,14 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
         naverMap.moveCamera(cameraUpdate)
         Log.d(ContentValues.TAG, "path size is ${path_size}")
     }
+
     var stackOfCamera = 0
     fun nextCamera() {
         var nextStep = path.coords[stackOfCamera * 60]
         val cameraUpdate = CameraUpdate.scrollTo(nextStep as LatLng)
         naverMap.moveCamera(cameraUpdate)
     }
+
     fun prevCamera() {
         var prevStep = path.coords[stackOfCamera * 60]
         val cameraUpdate = CameraUpdate.scrollTo(prevStep as LatLng)
