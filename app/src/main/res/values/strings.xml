@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">planT</string>
+<!--    카카오 로그인 네이티브 키-->
+    <string name="kakao_native_key">6bfe217ffadf1ed4b47e4e649d39d767</string>
+    <string name="kakao_key">kakao6bfe217ffadf1ed4b47e4e649d39d767</string>
     <!--로그인 회원가입-->
     <string name="id">id</string>
     <string name="password">password</string>

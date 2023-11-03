@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
 
+
     <!--for current location-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -50,7 +51,7 @@
 
                 <data
                     android:host="oauth"
-                    android:scheme="@string/kakao_redirection_scheme" />
+                    android:scheme="@string/kakao_key" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />

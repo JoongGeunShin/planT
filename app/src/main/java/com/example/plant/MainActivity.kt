@@ -21,11 +21,11 @@ import com.example.plant.NaverSearch.LocationSearchInterface
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
 import com.example.plant.main_fragment.HomeFragment
-import com.example.plant.main_fragment.SettingsFragment
 import com.example.plant.main_fragment.UserinfoFragment
 import com.example.plant.main_fragment.calendar.ui.calendar.CalendarFragment
 import com.example.plant.main_fragment.calendar.ui.memo.MemoFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.kakao.sdk.common.util.Utility
 import com.naver.maps.geometry.Coord
 import com.naver.maps.map.overlay.Marker
 import retrofit2.Call
@@ -106,7 +106,7 @@ open class MainActivity : AppCompatActivity() {
                         // Respond to navigation item 2 click
                     }
 
-                    R.id.menu_userinfo -> {
+                    else -> {
                         bnv_main.itemIconTintList =
                             ContextCompat.getColorStateList(this, R.color.color_bnv)
                         bnv_main.itemTextColor =
@@ -115,13 +115,6 @@ open class MainActivity : AppCompatActivity() {
                         // Respond to navigation item 3 click
                     }
 
-                    else -> {
-                        bnv_main.itemIconTintList =
-                            ContextCompat.getColorStateList(this, R.color.color_bnv)
-                        bnv_main.itemTextColor =
-                            ContextCompat.getColorStateList(this, R.color.color_bnv)
-                        SettingsFragment()
-                    }
                 }
             )
             true
