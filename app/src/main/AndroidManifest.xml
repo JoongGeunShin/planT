@@ -27,7 +27,7 @@
             android:value="u04wstprb6" />
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="87d0e216500f0b44811c930b20af5dd8" />
+            android:value="${KAKAO_KEY}" />
         <activity
             android:name=".IntroActivity"
             android:exported="true">
@@ -51,7 +51,7 @@
 
                 <data
                     android:host="oauth"
-                    android:scheme="@string/kakao_key" />
+                    android:scheme="${KAKAO_KEY}" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />

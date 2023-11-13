@@ -35,6 +35,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
+
+
+
+
+
 open class MainActivity : AppCompatActivity() {
 
     // naver map
@@ -42,7 +47,7 @@ open class MainActivity : AppCompatActivity() {
 
     // recycler view
     val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
-    val SEARCH_SECRET_KEY = "VMmDTZuvfv"
+    val SEARCH_SECRET_KEY = BuildConfig.SEARCH_SECRET_KEY
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
     lateinit var targetRecyclerView: RecyclerView
     lateinit var targetActivity: Activity
@@ -54,20 +59,13 @@ open class MainActivity : AppCompatActivity() {
     }
 
     //pathFinder
-    val PATHFINDER_CLIENT_ID = "u04wstprb6"
-    val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
     lateinit var startCoord: Coord
     lateinit var goalCoord: Coord
 
     // 마커 찍기
     private val marker = Marker()
 
-    // Geocode
-    val GEOCODE_CLIENT_ID = "u04wstprb6"
-    val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
-
     lateinit var editText: EditText
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

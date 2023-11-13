@@ -23,6 +23,7 @@ import com.kakao.sdk.user.UserApiClient
 import android.content.Intent
 import androidx.core.widget.addTextChangedListener
 import by.kirich1409.viewbindingdelegate.viewBinding
+import com.example.plant.BuildConfig
 import com.example.plant.databinding.FragmentLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -42,7 +43,7 @@ class LoginFragment : Fragment() {
         super.onAttach(context)
         // 2. Context를 Activity로 형변환하여 할당
         introActivity = context as IntroActivity
-        KakaoSdk.init(requireContext(), getString(R.string.kakao_native_key))
+        KakaoSdk.init(requireContext(), BuildConfig.KAKAO_NATIVE_KEY)
     }
 
     override fun onCreateView(

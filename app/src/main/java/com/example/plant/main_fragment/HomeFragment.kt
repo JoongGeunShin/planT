@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plant.BuildConfig
 import com.example.plant.HOTPLACE.HOTPLACEDTO
 import com.example.plant.HOTPLACE.HOTPLACESearchInterface
 import com.example.plant.MainActivity
@@ -72,7 +73,7 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     // Geocode
     val GEOCODE_CLIENT_ID = "u04wstprb6"
-    val GEOCODE_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+    val GEOCODE_SECRET_KEY = BuildConfig.GEOCODE_SECRET_KEY
 
 
     // naver map
@@ -90,13 +91,13 @@ class HomeFragment : Fragment(), FragmentListener, OnMapReadyCallback {
 
     // recycler view
     val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
-    val SEARCH_SECRET_KEY = "VMmDTZuvfv"
+    val SEARCH_SECRET_KEY = BuildConfig.SEARCH_SECRET_KEY
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
     var datas = mutableListOf<RecyclerViewData>()
 
     //pathFinder
     val PATHFINDER_CLIENT_ID = "u04wstprb6"
-    val PATHFINDER_SECRET_KEY = "UTtsqS8xv7TxQzZcE9offwjuXfQ9LKUqJm9CZ7UW"
+    val PATHFINDER_SECRET_KEY = BuildConfig.PATHFINDER_SECRET_KEY
 
     //프래그먼트 이동
     private lateinit var mFragmentListener: FragmentListener

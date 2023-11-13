@@ -5,6 +5,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+def KAKAO_KEY = properties.getProperty('KAKAO_KEY')
 android {
     namespace 'com.example.plant'
     compileSdk 34
@@ -18,7 +21,23 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        //네이버 키
+        buildConfigField "String", "GEOCODE_SECRET_KEY", properties['GEOCODE_SECRET_KEY']
+        buildConfigField "String", "SEARCH_SECRET_KEY", properties['SEARCH_SECRET_KEY']
+        buildConfigField "String", "PATHFINDER_SECRET_KEY", properties['PATHFINDER_SECRET_KEY']
+        //카카오 키
+        buildConfigField "String", "KAKAO_KEY", properties['KAKAO_KEY']
+        buildConfigField "String", "KAKAO_NATIVE_KEY", properties['KAKAO_NATIVE_KEY']
+        //manifest에 할당할 키
+        manifestPlaceholders = [KAKAO_KEY: KAKAO_KEY]
+
     }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
 
 
 
@@ -41,6 +60,8 @@ android {
     viewBinding{
         enabled = true
     }
+
+
 }
 
 dependencies {

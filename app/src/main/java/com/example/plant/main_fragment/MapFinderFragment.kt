@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plant.BuildConfig
 import com.example.plant.MainActivity
 import com.example.plant.NaverSearch.RecyclerViewAdapter
 import com.example.plant.NaverSearch.RecyclerViewData
@@ -28,7 +29,7 @@ class MapFinderFragment : Fragment(), FragmentListener {
 
     //리사이클러뷰
     private val SEARCH_CLIENT_ID = "c8hh8dsrqnsuh3wDLvzi"
-    private val SEARCH_SECRET_KEY = "VMmDTZuvfv"
+    private val SEARCH_SECRET_KEY = BuildConfig.SEARCH_SECRET_KEY
     var recyclerViewAdapter: RecyclerViewAdapter = RecyclerViewAdapter(mainActivity)
     val mdatas = mutableListOf<RecyclerViewData>()
     lateinit var text: String
